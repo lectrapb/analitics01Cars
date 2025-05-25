@@ -1,6 +1,6 @@
 ---
 title: "ANALISIS EXPLORATORIO 1 CONCESIONARIO DE AUTOS"
-author: Alejandra / Giovanny Porras 
+author: Alejandra Cifuentes / Giovanny Porras 
 output: 
   pdf_document:
      latex_engine: pdflatex
@@ -19,14 +19,22 @@ knitr::opts_chunk$set(echo = TRUE)
 # Instala paquetes necesarios para el reporte
 install.packages("ggplot2")
 install.packages("readxl")
-install.packages("tidyr")
+#install.packages("tidyr")
 install.packages("dplyr")
 install.packages("knitr")
 install.packages("kableExtra")
 install.packages("tinytex")
-tinytex::install_tinytex()
+#tinytex::install_tinytex()
 
 ```
+```{r}
+#install.packages("tidyr")
+#tinytex::install_tinytex() 
+#install.packages("tidyverse")
+```
+
+
+
 
 
 ```{r importaciones, include=FALSE}
@@ -46,12 +54,12 @@ b. Cargar el archivo de datos en RStudio
 
 **Rta:** Carga de datos inicial 
 ```{r carga de datos inicial, include=TRUE}
-datos_base <- datos <- read_excel("D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto-02-Autos/BASE/t1fe-tabla_taller.xlsx")
+datos_base <- datos <- read_excel("C:/Users/PC/Documents/ANALITICA/analitics01Cars/BASE/t1fe-tabla_taller.xlsx")
 kable(head(datos_base, 10,  caption = "Datos iniciales"), format = "latex", booktabs = TRUE) %>% 
-  kable_styling(latex_options = c("scale_down", "hold_position"))
+kable_styling(latex_options = c("scale_down", "hold_position"))
 ```
  
-```{r impresion_datos_base, include=FALSE}
+```{r impresion_datos_base, include=TRUE}
 # imprimir datos base 
 Sys.setlocale("LC_ALL", "Spanish_Colombia.UTF-8")
 print(datos_base)

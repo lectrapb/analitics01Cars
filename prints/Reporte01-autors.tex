@@ -116,12 +116,12 @@
 \urlstyle{same}
 \hypersetup{
   pdftitle={ANALISIS EXPLORATORIO 1 CONCESIONARIO DE AUTOS},
-  pdfauthor={Alejandra / Giovanny Porras},
+  pdfauthor={Alejandra Cifuentes / Giovanny Porras},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
 \title{ANALISIS EXPLORATORIO 1 CONCESIONARIO DE AUTOS}
-\author{Alejandra / Giovanny Porras}
+\author{Alejandra Cifuentes / Giovanny Porras}
 \date{2025-05-24}
 
 \begin{document}
@@ -131,6 +131,14 @@
 \setcounter{tocdepth}{2}
 \tableofcontents
 }
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#install.packages("tidyr")}
+\CommentTok{\#tinytex::install\_tinytex() }
+\CommentTok{\#install.packages("tidyverse")}
+\end{Highlighting}
+\end{Shaded}
+
 \subsection{2 Exploracion de datos}\label{exploracion-de-datos}
 
 \begin{enumerate}
@@ -146,9 +154,9 @@
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{datos\_base }\OtherTok{\textless{}{-}}\NormalTok{ datos }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto{-}02{-}Autos/BASE/t1fe{-}tabla\_taller.xlsx"}\NormalTok{)}
+\NormalTok{datos\_base }\OtherTok{\textless{}{-}}\NormalTok{ datos }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"C:/Users/PC/Documents/ANALITICA/analitics01Cars/BASE/t1fe{-}tabla\_taller.xlsx"}\NormalTok{)}
 \FunctionTok{kable}\NormalTok{(}\FunctionTok{head}\NormalTok{(datos\_base, }\DecValTok{10}\NormalTok{,  }\AttributeTok{caption =} \StringTok{"Datos iniciales"}\NormalTok{), }\AttributeTok{format =} \StringTok{"latex"}\NormalTok{, }\AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"scale\_down"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{))}
+\FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"scale\_down"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -384,5 +392,17 @@ auto''.}\label{analisis-de-la-variable-marca-marca-de-auto.}
   Evaluar la variable \textbf{``MARCA DE AUTO''} y determinar si hay
   faltantes. \textbf{Rta:}
 \end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#datos\_base$\textasciigrave{}MARCA DE AUTO\textasciigrave{}(is.na)}
+ \CommentTok{\#(is.na(datos\_base$\textasciigrave{}MARCA DE AUTO\textasciigrave{}))}
+ 
+ \CommentTok{\#Eliminar columna 1, 2 }
+\NormalTok{ datos }\OtherTok{\textless{}{-}}\NormalTok{ datos[}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), ]}
+\NormalTok{ na\_marca\_autos }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
 
 \end{document}
