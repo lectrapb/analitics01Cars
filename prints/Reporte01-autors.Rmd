@@ -1,6 +1,13 @@
 ---
-title: "Reporte01-Autors"
-output: pdf_document
+title: "ANALISIS EXPLORATORIO 1 CONCESIONARIO DE AUTOS"
+author: Alejandra / Giovanny Porras 
+output: 
+  pdf_document:
+     latex_engine: pdflatex
+     toc: true
+     keep_tex: true
+header-includes:
+  - \renewcommand{\contentsname}{Índice}
 date: "2025-05-24"
 ---
 
@@ -8,22 +15,174 @@ date: "2025-05-24"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+```{r instalacion librerias, eval=FALSE, include=FALSE}
+# Instala paquetes necesarios para el reporte
+install.packages("ggplot2")
+install.packages("readxl")
+install.packages("tidyr")
+install.packages("dplyr")
+install.packages("knitr")
+install.packages("kableExtra")
+install.packages("tinytex")
+tinytex::install_tinytex()
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r importaciones, include=FALSE}
+library(ggplot2)
+library(readxl)
+library(tidyr)
+library(dplyr)
+library(knitr)
+library(DT)
+library(kableExtra)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## 2 Exploracion de datos 
+
+a. Descargar el archivo TABLA_TALLER.xlsx
+b. Cargar el archivo de datos en RStudio 
+
+**Rta:** Carga de datos inicial 
+```{r carga de datos inicial, include=TRUE}
+datos_base <- datos <- read_excel("D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto-02-Autos/BASE/t1fe-tabla_taller.xlsx")
+kable(head(datos_base, 10,  caption = "Datos iniciales"), format = "latex", booktabs = TRUE) %>% 
+  kable_styling(latex_options = c("scale_down", "hold_position"))
+```
+ 
+```{r impresion_datos_base, include=FALSE}
+# imprimir datos base 
+Sys.setlocale("LC_ALL", "Spanish_Colombia.UTF-8")
+print(datos_base)
+```
+
+c. Describir brevemente la estructura del conjunto de datos: ¿Cuantos clientes estan registrados y que variables incluyen?
+
+```{r calcular-conteo, include=TRUE}
+no_datos_persona <- datos_base %>%
+  filter(grepl("PERSONA", PERSONA)) %>%
+  count()
+
+cabeceras_datos <- names(datos_base)
+```
+
+**Rta:** El conjunto de datos tiene `r no_datos_persona ` clientes registrados e incluyen las varibles `r cabeceras_datos ` .
+
+d. Realizar una exploracion rapida utilizando funciones como head(), tail(), str(), summary(), 
+**Rta:** Los ultimos valores son (tail)
+```{r tail, include=TRUE}
+ultimos_datos <- tail(datos_base)
+kable(head(ultimos_datos, 10, caption = "Datos ultima posicion"), format = "latex", booktabs = TRUE) %>%kable_styling(latex_options = c("scale_down", "hold_position"))
+```
+**Funciones adicionales:**
+```{r}
+#print(str(datos_base))
+#print(dim(datos_base))
+#print(colnames(datos_base))
+print(summary(datos_base))
+```
+e. Identificar si hay datos faltantes y cuantificar cuantos son en toal y por variable 
+
+```{r}
+#is.na(datos_base)
+total_na = datos_base %>% is.na %>% sum()  
+#Contar NA por columna(variable) 
+na_por_columna <- colSums(is.na(datos_base))
+tabla_na <- data.frame(
+   Variable = names(na_por_columna), 
+   total_na = as.vector(na_por_columna) 
+)
+
+#Contar NA total 
+#rowSums(is.na(datos_base))
+
+#Impresion de tabla 
+#kable(tabla_na, caption = "Variables faltantes por cuantificar")  %>%
+#  kable_styling(full_width = FALSE, position = "left")
+
+```
+**Rta**: 
+- El numero de total de datos faltantes es  **`r total_na`** y por variable son los siguientes:
+```{r tabla_variables_na, echo=FALSE, results='asis'}
+kable(tabla_na, caption = "Variables faltantes por cuantificar")  %>%
+  kable_styling(full_width = FALSE, position = "left")
+```
+- Analisis: Hay problemas de datos en todas las variables sera importante discriminar cada caso 
+
+f. Comentar sobre los posibles problemas en los datos: 
+
+  **Filas vacías al inicio del archivo:** 
+  - Las dos primeras filas están vacías o no contienen datos válidos.
+
+  **Inconsistencias categóricas:**
+  
+   - Variabilidad en la codificación de la variable SEXO, con valores como f, mujer, hombre, nan o minúsculas inconsistentes.
+   - Formatos no estandarizados en NIVEL ESCOLAR, como el uso de PhD en lugar de DOCTORADO.
+   - Uso de minúsculas en valores de MARCA DE AUTO, como renault.
+
+  **Valores faltantes:** 
+  
+  - Algunas filas tienen múltiples variables vacías, como en el caso de la PERSONA 24.
+
+  **Valores extremos o anómalos (outliers):**
+  
+  - PERSONA 31: valor de ESTATURA = 3.45 m, fuera del rango fisiológico normal.
+  - PERSONA 33: valor de NUMERO DE HIJOS = 54, ampliamente fuera del promedio observado (3.03).
+  
+```{r observaciones, include=FALSE}
+## Observaciones
+
+#1. Las dos primeras filas se pueden eliminar ya que no cuentan con datos.
+#2. La PERSONA 15 tiene en la variable **SEXO** el valor de **MUJER**, que es inconsistente.
+#3. La PERSONA 31 tiene en la variable **SEXO** el valor de **nan**, que es inconsistente.
+#4. La PERSONA 32 tiene en la variable **SEXO** el valor de **HOMBRE**, que es inconsistente.
+#5. La PERSONA 36 tiene en la variable **SEXO** el valor de **m**, que es inconsistente.
+#6. La PERSONA 37 tiene en la variable **SEXO** el valor de **m**, que es inconsistente.
+#7. La PERSONA 38 tiene en la variable **SEXO** el valor de **mujer**, que es inconsistente.
+#8. La PERSONA 39 tiene en la variable **SEXO** el valor de **m**, que es inconsistente.
+#9. La PERSONA 40 tiene en la variable **SEXO** el valor de **hombre**, que es inconsistente.
+#10. La PERSONA 51 tiene en la variable **SEXO** el valor de **MUJER**, que es inconsistente.
+#11. La PERSONA 18 tiene en la variable **NIVEL ESCOLAR** el valor **PHD** en vez de **DOCTORADO**.
+#12. La PERSONA 33 tiene en la variable **NIVEL ESCOLAR** el valor **PHD** en vez de **DOCTORADO**.
+#13. La PERSONA 40 tiene en la variable **NIVEL ESCOLAR** el valor **PHD** en vez de **DOCTORADO**.
+#14. La PERSONA 54 tiene en la variable **NIVEL ESCOLAR** el valor **PHD** en vez de **DOCTORADO**.
+#15. La PERSONA 24 tiene varios datos faltantes en las variables de **EDAD, NIVEL ESCOLAR, NUMERO DE HIJOS**.
+#16. La PERSONA 33 tiene en la variable **NUMERO DE HIJOS** un valor de **54**, que es anormalmente alto respecto a la media (3.03).
+#17. La PERSONA 31 tiene en la variable **ESTATURA** un valor de **3.45**, que es anormal respecto a la media (1.69).
+#18. La PERSONA 4 tiene en la variable **SEXO** el valor **f**, que no sigue el formato en mayúsculas usado en los demás registros.
+#19. La PERSONA 18 tiene en la variable **SEXO** el valor **f**, que no sigue el formato en mayúsculas usado en los demás registros.
+#20. La PERSONA 36 tiene en la variable **SEXO** el valor **m**, que no sigue el formato en mayúsculas usado en los demás registros.
+#21. La PERSONA 37 tiene en la variable **SEXO** el valor **m**, que no sigue el formato en mayúsculas usado en los demás registros.
+#22. La PERSONA 38 tiene en la variable **SEXO** el valor **mujer**, que no sigue el formato en mayúsculas usado en los demás registros.
+#23. La PERSONA 39 tiene en la variable **SEXO** el valor **m**, que no sigue el formato en mayúsculas usado en los demás registros.
+#24. La PERSONA 40 tiene en la variable **SEXO** el valor **hombre**, que no sigue el formato en mayúsculas usado en los demás registros.
+#25. La PERSONA 54 tiene en la variable **SEXO** el valor **f**, que no sigue el formato en mayúsculas usado en los demás registros.
+#26. La PERSONA 58 tiene en la variable **SEXO** el valor **f**, que no sigue el formato en mayúsculas usado en los demás registros.
+#27. La PERSONA 18 tiene en la variable **NIVEL ESCOLAR** el valor **PhD**, que no sigue el formato en mayúsculas usado en los demás registros.
+#28. La PERSONA 33 tiene en la variable **NIVEL ESCOLAR** el valor **PhD**, que no sigue el formato en mayúsculas usado en los demás registros.
+#29. La PERSONA 40 tiene en la variable **NIVEL ESCOLAR** el valor **PhD**, que no sigue el formato en mayúsculas usado en los demás registros.
+#30. La PERSONA 54 tiene en la variable **NIVEL ESCOLAR** el valor **PhD**, que no sigue el formato en mayúsculas usado en los demás registros.
+#31. La PERSONA 36 tiene en la variable **MARCA DE AUTO** el valor **renault**, que no sigue el formato en mayúsculas usado en los demás registros.
+
+```
+  
+
+\newpage
+
+## 3 Analisis de la variable Marca "Marca de auto".  
+
+a. Evaluar la variable **"MARCA DE AUTO"** y determinar si hay faltantes. 
+**Rta:** 
+```{r}
+#datos_base$`MARCA DE AUTO`(is.na)
+ #(is.na(datos_base$`MARCA DE AUTO`))
+ 
+ #Eliminar columna 1, 2 
+ datos <- datos[-c(1,2), ]
+ na_marca_autos <- sum(is.na(datos_base$`MARCA DE AUTO`)) 
+  
+```
+
+
+
