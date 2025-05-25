@@ -146,7 +146,7 @@
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{datos\_base }\OtherTok{\textless{}{-}}\NormalTok{ datos }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto{-}02{-}Autos/BASE/t1fe{-}tabla\_taller.xlsx"}\NormalTok{)}
+\NormalTok{datos\_base }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto{-}02{-}Autos/BASE/t1fe{-}tabla\_taller.xlsx"}\NormalTok{)}
 \FunctionTok{kable}\NormalTok{(}\FunctionTok{head}\NormalTok{(datos\_base, }\DecValTok{10}\NormalTok{,  }\AttributeTok{caption =} \StringTok{"Datos iniciales"}\NormalTok{), }\AttributeTok{format =} \StringTok{"latex"}\NormalTok{, }\AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
   \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"scale\_down"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{))}
 \end{Highlighting}
@@ -374,15 +374,182 @@ están vacías o no contienen datos válidos.
 
 \newpage
 
-\subsection{3 Analisis de la variable Marca ``Marca de
-auto''.}\label{analisis-de-la-variable-marca-marca-de-auto.}
+\subsection{3 Análisis de la variable Marca ``Marca de
+auto''.}\label{anuxe1lisis-de-la-variable-marca-marca-de-auto.}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
 \tightlist
 \item
   Evaluar la variable \textbf{``MARCA DE AUTO''} y determinar si hay
-  faltantes. \textbf{Rta:}
+  faltantes.
 \end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+ \CommentTok{\#datos\_base$\textasciigrave{}MARCA DE AUTO\textasciigrave{}(is.na)}
+ \CommentTok{\#(is.na(datos\_base$\textasciigrave{}MARCA DE AUTO\textasciigrave{}))}
+\NormalTok{ data\_na\_marca\_autos }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Rta:} Se tratan datos faltantes y se encuentran un total de
+\textbf{4}; se realiza tratamiento de datos remplazando los
+``na''/``NA'' a ``NO\_MANEJA'', se convierte todo mayúsculas.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+ \FunctionTok{Sys.setlocale}\NormalTok{(}\StringTok{"LC\_ALL"}\NormalTok{, }\StringTok{"Spanish\_Colombia.UTF{-}8"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "LC_COLLATE=Spanish_Colombia.utf8;LC_CTYPE=Spanish_Colombia.utf8;LC_MONETARY=Spanish_Colombia.utf8;LC_NUMERIC=C;LC_TIME=Spanish_Colombia.utf8"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+ \CommentTok{\#Eliminar columna 1, 2 }
+\NormalTok{ datos\_base }\OtherTok{\textless{}{-}}\NormalTok{ datos\_base[}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), ]}
+ \CommentTok{\#Datos Eliminados}
+ \CommentTok{\#print(datos\_base)}
+\NormalTok{ na\_marca\_autos }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{)) }
+ \CommentTok{\# PERSONA 13, 32, 49, NA y datos vacios }
+\NormalTok{ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{[}\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{) }\SpecialCharTok{|}\NormalTok{ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}} \SpecialCharTok{==} \StringTok{"NA"}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"SIN\_CONFIRMAR"}
+ \CommentTok{\# PERSONA 39 cambia FOR A FORD }
+\NormalTok{ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{[ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}} \SpecialCharTok{==} \StringTok{"FOR"}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"FORD"}
+ \CommentTok{\# PERSONA 40 cambia BWM A BMW }
+\NormalTok{ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{[ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}} \SpecialCharTok{==} \StringTok{"BWM"}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"BMW"}
+ 
+ \CommentTok{\#print(datos\_base)}
+ \CommentTok{\# PERSONA 36 cambio a mayuscula marca }
+\NormalTok{ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}} \OtherTok{\textless{}{-}} \FunctionTok{toupper}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{)}
+ \FunctionTok{print}\NormalTok{(datos\_base)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 60 x 9
+##    PERSONA    EDAD  SEXO  ESTATURA `NIVEL ESCOLAR` `MARCA DE AUTO`
+##    <chr>      <chr> <chr> <chr>    <chr>           <chr>          
+##  1 PERSONA 1  21    M     1.54     MAESTRÍA        AUDI           
+##  2 PERSONA 2  26    F     1.55     PROFESIONAL     RENAULT        
+##  3 PERSONA 3  30    F     1.6      DOCTORADO       BMW            
+##  4 PERSONA 4  31    f     1.7      PROFESIONAL     RENAULT        
+##  5 PERSONA 5  35    M     1.71     MAESTRÍA        AUDI           
+##  6 PERSONA 6  65    M     1.8      MAESTRÍA        AUDI           
+##  7 PERSONA 7  45    M     1.54     MAESTRÍA        BMW            
+##  8 PERSONA 8  42    F     1.52     PROFESIONAL     RENAULT        
+##  9 PERSONA 9  52    F     1.51     DOCTORADO       RENAULT        
+## 10 PERSONA 10 63    M     1.65     DOCTORADO       RENAULT        
+## # i 50 more rows
+## # i 3 more variables: `NUMERO DE HIJOS` <chr>, SALARIO <dbl>, MASCOTA <chr>
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Crear un tabla de frecuencias para entender la popularidad de las
+  diferentes marcas entre los cliente. \textbf{Rta:} En la tabla de
+  frecuencias se observa que las marcas más populares son AUDI,
+  CHEVROLET, RENAULT y BMW. Los tres usuarios que no tienen la categoría
+  ``\,``SIN\_CONFIRMAR''\,'' se identificaron como personas a partir de
+  50 años
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tabla\_frecuencias\_autos }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{table}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{))}
+\FunctionTok{names}\NormalTok{(tabla\_frecuencias\_autos) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"MARCA DE AUTO"}\NormalTok{, }\StringTok{"Frecuencia"}\NormalTok{)}
+\CommentTok{\#Organizar Mayor a menor}
+\NormalTok{tabla\_frecuencias\_autos }\OtherTok{\textless{}{-}}\NormalTok{ tabla\_frecuencias\_autos }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(Frecuencia))}
+\FunctionTok{print}\NormalTok{(tabla\_frecuencias\_autos)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   MARCA DE AUTO Frecuencia
+## 1          AUDI         13
+## 2       RENAULT         13
+## 3           BMW         12
+## 4     CHEVROLET         12
+## 5          FORD          7
+## 6 SIN_CONFIRMAR          3
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Generar graficos de barras y de tortas para visualizar la distribucion
+  de las marcas de autos y proporcionar una interpretacion. \textbf{Rta:
+  } Se identifica que las marcas de vehiculos preferidas por los
+  clientes del concesionario son \textbf{AUDi} y \textbf{RENAULT}; se
+  observa una segmentacion igual por pares entre las entre AUDI/RENAULT
+  y CHEVROLET/BMW
+\end{enumerate}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/grafico_barras_marcas-1.pdf}}
+\textbf{Rta: } La preferencia de vehículos esta distribuida entre 4
+marcas que suman 83\% de la muestra, estas cuatro marcas a su vez
+representan dos segmentos que se reparten en el mismo porcentaje
+21\%/21\% y 20\%/20\%.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Concluir cuál es la marca de auto más popular entre los clientes.
+  \textbf{Rta:} Se concluyen que AUDI y RENAULT son las marcas lideres
+  con una distribución uniforme en el los clientes del concesionario en
+  un porcentaje del 21.7 entre ambas ocupan el 42.4\%.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tabla\_frecuencias\_autos}\SpecialCharTok{$}\NormalTok{Porcentaje }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(tabla\_frecuencias\_autos}\SpecialCharTok{$}\NormalTok{Frecuencia}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(tabla\_frecuencias\_autos}\SpecialCharTok{$}\NormalTok{Frecuencia)}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(tabla\_frecuencias\_autos)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   MARCA DE AUTO Frecuencia Porcentaje
+## 1          AUDI         13       21.7
+## 2       RENAULT         13       21.7
+## 3           BMW         12       20.0
+## 4     CHEVROLET         12       20.0
+## 5          FORD          7       11.7
+## 6 SIN_CONFIRMAR          3        5.0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tabla\_frecuencias\_autos}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}} \OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(}
+\NormalTok{  tabla\_frecuencias\_autos}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{,}
+  \AttributeTok{levels =}\NormalTok{ tabla\_frecuencias\_autos}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{[}\FunctionTok{order}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{tabla\_frecuencias\_autos}\SpecialCharTok{$}\NormalTok{Frecuencia)]}
+\NormalTok{)}
+\CommentTok{\# Crear el grafico circular de MARCAS AUTOS }
+\FunctionTok{ggplot}\NormalTok{(tabla\_frecuencias\_autos, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \StringTok{""}\NormalTok{, }\AttributeTok{y =}\NormalTok{ Frecuencia, }\AttributeTok{fill =} \StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{stat =} \StringTok{"identity"}\NormalTok{, }\AttributeTok{width =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{coord\_polar}\NormalTok{(}\StringTok{"y"}\NormalTok{, }\AttributeTok{start =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =} \FunctionTok{paste0}\NormalTok{(Porcentaje, }\StringTok{"\%"}\NormalTok{)),}
+            \AttributeTok{position =} \FunctionTok{position\_stack}\NormalTok{(}\AttributeTok{vjust =} \FloatTok{0.5}\NormalTok{),}
+            \AttributeTok{size =} \DecValTok{4}\NormalTok{,}
+            \AttributeTok{color =} \StringTok{"black"}\NormalTok{,}
+            \AttributeTok{fontface =} \StringTok{"bold"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Distribucion Marcas de Autos"}\NormalTok{,}
+       \AttributeTok{fill =} \StringTok{"MARCA DE AUTO"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Paired"}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# Usando paleta predefinida}
+  \FunctionTok{theme\_void}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"right"}\NormalTok{,}
+        \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/unnamed-chunk-7-1.pdf}}
 
 \end{document}

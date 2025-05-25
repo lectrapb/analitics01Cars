@@ -37,6 +37,7 @@ library(dplyr)
 library(knitr)
 library(DT)
 library(kableExtra)
+library(forcats)
 ```
 
 ## 2 Exploracion de datos 
@@ -46,7 +47,7 @@ b. Cargar el archivo de datos en RStudio
 
 **Rta:** Carga de datos inicial 
 ```{r carga de datos inicial, include=TRUE}
-datos_base <- datos <- read_excel("D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto-02-Autos/BASE/t1fe-tabla_taller.xlsx")
+datos_base <- read_excel("D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto-02-Autos/BASE/t1fe-tabla_taller.xlsx")
 kable(head(datos_base, 10,  caption = "Datos iniciales"), format = "latex", booktabs = TRUE) %>% 
   kable_styling(latex_options = c("scale_down", "hold_position"))
 ```
@@ -170,19 +171,100 @@ f. Comentar sobre los posibles problemas en los datos:
 
 \newpage
 
-## 3 Analisis de la variable Marca "Marca de auto".  
+## 3 Análisis de la variable Marca "Marca de auto".  
 
 a. Evaluar la variable **"MARCA DE AUTO"** y determinar si hay faltantes. 
-**Rta:** 
+
 ```{r}
-#datos_base$`MARCA DE AUTO`(is.na)
+ #datos_base$`MARCA DE AUTO`(is.na)
  #(is.na(datos_base$`MARCA DE AUTO`))
- 
+ data_na_marca_autos <- sum(is.na(datos_base$`MARCA DE AUTO`))
+```
+**Rta:** 
+Se tratan datos faltantes y se encuentran un total de   **`r data_na_marca_autos`**;  se realiza tratamiento de datos remplazando los "na"/"NA" a "NO_MANEJA", se convierte todo mayúsculas.
+```{r}
+ Sys.setlocale("LC_ALL", "Spanish_Colombia.UTF-8")
  #Eliminar columna 1, 2 
- datos <- datos[-c(1,2), ]
+ datos_base <- datos_base[-c(1,2), ]
+ #Datos Eliminados
+ #print(datos_base)
  na_marca_autos <- sum(is.na(datos_base$`MARCA DE AUTO`)) 
-  
+ # PERSONA 13, 32, 49, NA y datos vacios 
+ datos_base$`MARCA DE AUTO`[is.na(datos_base$`MARCA DE AUTO`) | datos_base$`MARCA DE AUTO` == "NA"] <- "SIN_CONFIRMAR"
+ # PERSONA 39 cambia FOR A FORD 
+ datos_base$`MARCA DE AUTO`[ datos_base$`MARCA DE AUTO` == "FOR"] <- "FORD"
+ # PERSONA 40 cambia BWM A BMW 
+ datos_base$`MARCA DE AUTO`[ datos_base$`MARCA DE AUTO` == "BWM"] <- "BMW"
+ 
+ #print(datos_base)
+ # PERSONA 36 cambio a mayuscula marca 
+ datos_base$`MARCA DE AUTO` <- toupper(datos_base$`MARCA DE AUTO`)
+ print(datos_base)
 ```
 
+b. Crear un tabla de frecuencias para entender la popularidad de las diferentes marcas entre los cliente. 
+**Rta:** En la tabla de frecuencias se observa que las marcas más populares son AUDI, CHEVROLET, RENAULT y BMW. Los tres usuarios que no tienen la categoría ""SIN_CONFIRMAR"" se identificaron como personas a partir de 50 años       
+```{r}
+tabla_frecuencias_autos <- as.data.frame(table(datos_base$`MARCA DE AUTO`))
+names(tabla_frecuencias_autos) <- c("MARCA DE AUTO", "Frecuencia")
+#Organizar Mayor a menor
+tabla_frecuencias_autos <- tabla_frecuencias_autos %>% arrange(desc(Frecuencia))
+print(tabla_frecuencias_autos)
+```
 
+c. Generar graficos de barras y de tortas para visualizar la distribucion de las marcas de autos y proporcionar una interpretacion. 
+**Rta: **
+Se identifica que las marcas de vehiculos preferidas por los clientes del concesionario son **AUDi** 
+y **RENAULT**; se observa una segmentacion igual por pares entre las entre AUDI/RENAULT y CHEVROLET/BMW
+
+```{r grafico_barras_marcas, echo=FALSE, results='asis' }
+
+#Diagrama de barras MARCA AUTO
+
+ggplot(tabla_frecuencias_autos, aes(x = fct_reorder(`MARCA DE AUTO`, Frecuencia, .desc = TRUE), 
+                                    y = Frecuencia, fill = `MARCA DE AUTO`)) +
+  geom_bar(stat = "identity",  fill = "steelblue") +
+  geom_text(aes(label = Frecuencia), vjust = -0.5, size = 3.5) +
+  labs(title = "Distribución de marcas de autos",
+       x = "Marca de Auto",
+       y = "Frecuencia") +
+  #scale_fill_brewer(palette = "Set3") +  # Usando paleta predefinida para categorias
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1))  # Texto en Ãngulo para mejor lectura
+
+```
+**Rta: **
+La preferencia de vehículos esta distribuida entre 4 marcas que suman 83% de la muestra, estas cuatro marcas a su vez representan dos segmentos que se reparten en el mismo porcentaje 21%/21% y 20%/20%.  
+```{r}
+
+```
+
+d. Concluir cuál es la marca de auto más popular entre los clientes. 
+**Rta:**
+Se concluyen que AUDI y RENAULT son las marcas lideres con una distribución uniforme en el los clientes del concesionario en un porcentaje del 21.7 entre ambas ocupan el 42.4%.  
+```{r}
+
+tabla_frecuencias_autos$Porcentaje <- round(tabla_frecuencias_autos$Frecuencia/sum(tabla_frecuencias_autos$Frecuencia)*100, 1)
+print(tabla_frecuencias_autos)
+tabla_frecuencias_autos$`MARCA DE AUTO` <- factor(
+  tabla_frecuencias_autos$`MARCA DE AUTO`,
+  levels = tabla_frecuencias_autos$`MARCA DE AUTO`[order(-tabla_frecuencias_autos$Frecuencia)]
+)
+# Crear el grafico circular de MARCAS AUTOS 
+ggplot(tabla_frecuencias_autos, aes(x = "", y = Frecuencia, fill = `MARCA DE AUTO`)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  geom_text(aes(label = paste0(Porcentaje, "%")),
+            position = position_stack(vjust = 0.5),
+            size = 4,
+            color = "black",
+            fontface = "bold") +
+  labs(title = "Distribucion Marcas de Autos",
+       fill = "MARCA DE AUTO") +
+  scale_fill_brewer(palette = "Paired") +  # Usando paleta predefinida
+  theme_void() +
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5, face = "bold"))
+```
 
