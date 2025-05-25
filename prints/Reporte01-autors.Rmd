@@ -24,8 +24,7 @@ install.packages("dplyr")
 install.packages("knitr")
 install.packages("kableExtra")
 install.packages("tinytex")
-tinytex::install_tinytex()
-
+install.packages("patchwork")
 ```
 
 
@@ -38,6 +37,7 @@ library(knitr)
 library(DT)
 library(kableExtra)
 library(forcats)
+library(patchwork)
 ```
 
 ## 2 Exploracion de datos 
@@ -83,7 +83,7 @@ kable(head(ultimos_datos, 10, caption = "Datos ultima posicion"), format = "late
 #print(colnames(datos_base))
 print(summary(datos_base))
 ```
-e. Identificar si hay datos faltantes y cuantificar cuantos son en toal y por variable 
+e. Identificar si hay datos faltantes y cuantificar cuantos son en total y por variable 
 
 ```{r}
 #is.na(datos_base)
@@ -176,18 +176,15 @@ f. Comentar sobre los posibles problemas en los datos:
 a. Evaluar la variable **"MARCA DE AUTO"** y determinar si hay faltantes. 
 
 ```{r}
- #datos_base$`MARCA DE AUTO`(is.na)
- #(is.na(datos_base$`MARCA DE AUTO`))
  data_na_marca_autos <- sum(is.na(datos_base$`MARCA DE AUTO`))
 ```
 **Rta:** 
-Se tratan datos faltantes y se encuentran un total de   **`r data_na_marca_autos`**;  se realiza tratamiento de datos remplazando los "na"/"NA" a "NO_MANEJA", se convierte todo mayúsculas.
-```{r}
- Sys.setlocale("LC_ALL", "Spanish_Colombia.UTF-8")
+Se tratan datos faltantes y se encuentran un total de   **`r data_na_marca_autos`**;  se realiza tratamiento de datos remplazando los "na"/"NA" a "SIN_CONFIRMAR", se convierte todo mayúsculas.
+```{r tratamiento_marca_autos, include=TRUE}
+ #Tratamiento datos MARCA DE AUTOS 
  #Eliminar columna 1, 2 
  datos_base <- datos_base[-c(1,2), ]
  #Datos Eliminados
- #print(datos_base)
  na_marca_autos <- sum(is.na(datos_base$`MARCA DE AUTO`)) 
  # PERSONA 13, 32, 49, NA y datos vacios 
  datos_base$`MARCA DE AUTO`[is.na(datos_base$`MARCA DE AUTO`) | datos_base$`MARCA DE AUTO` == "NA"] <- "SIN_CONFIRMAR"
@@ -195,64 +192,44 @@ Se tratan datos faltantes y se encuentran un total de   **`r data_na_marca_autos
  datos_base$`MARCA DE AUTO`[ datos_base$`MARCA DE AUTO` == "FOR"] <- "FORD"
  # PERSONA 40 cambia BWM A BMW 
  datos_base$`MARCA DE AUTO`[ datos_base$`MARCA DE AUTO` == "BWM"] <- "BMW"
- 
- #print(datos_base)
  # PERSONA 36 cambio a mayuscula marca 
  datos_base$`MARCA DE AUTO` <- toupper(datos_base$`MARCA DE AUTO`)
- print(datos_base)
 ```
+b. Crear una tabla de frecuencias para entender la popularidad de las diferentes marcas entre los cliente.
 
-b. Crear un tabla de frecuencias para entender la popularidad de las diferentes marcas entre los cliente. 
-**Rta:** En la tabla de frecuencias se observa que las marcas más populares son AUDI, CHEVROLET, RENAULT y BMW. Los tres usuarios que no tienen la categoría ""SIN_CONFIRMAR"" se identificaron como personas a partir de 50 años       
-```{r}
+**Rta: **En la tabla de frecuencias se observa que las marcas más populares son AUDI, CHEVROLET, RENAULT y BMW. Los tres usuarios que no tienen la categoría ""SIN_CONFIRMAR"" se identificaron como personas a partir de 50 años.
+
+```{r tabla_frecuencias, echo=FALSE, results='asis'}
 tabla_frecuencias_autos <- as.data.frame(table(datos_base$`MARCA DE AUTO`))
 names(tabla_frecuencias_autos) <- c("MARCA DE AUTO", "Frecuencia")
 #Organizar Mayor a menor
 tabla_frecuencias_autos <- tabla_frecuencias_autos %>% arrange(desc(Frecuencia))
-print(tabla_frecuencias_autos)
+#print(tabla_frecuencias_autos)
+kable(head(tabla_frecuencias_autos,  caption = "Distribucino Marcas"),format = "latex", booktabs = TRUE)
 ```
 
-c. Generar graficos de barras y de tortas para visualizar la distribucion de las marcas de autos y proporcionar una interpretacion. 
+c. Generar gráficos de barras y de tortas para visualizar la distribución de las marcas de autos y proporcionar una interpretación.
+
 **Rta: **
-Se identifica que las marcas de vehiculos preferidas por los clientes del concesionario son **AUDi** 
-y **RENAULT**; se observa una segmentacion igual por pares entre las entre AUDI/RENAULT y CHEVROLET/BMW
+- Se identifica que las marcas de vehículos preferidas por los clientes del concesionario son **AUDI**  y **RENAULT**; se observa una segmentación igual por pares entre las entre AUDI/RENAULT y CHEVROLET/BMW
 
-```{r grafico_barras_marcas, echo=FALSE, results='asis' }
+- La preferencia de vehículos esta distribuida entre 4 marcas que suman 83% de la muestra, estas cuatro marcas a su vez representan dos segmentos que se reparten en el mismo porcentaje 21%/21% y 20%/20%.  
 
-#Diagrama de barras MARCA AUTO
+```{r grafico_torta_barras_marca de autos,echo=FALSE, results='asis'}
+library(ggplot2)
+library(forcats)  # para fct_reorder
 
-ggplot(tabla_frecuencias_autos, aes(x = fct_reorder(`MARCA DE AUTO`, Frecuencia, .desc = TRUE), 
-                                    y = Frecuencia, fill = `MARCA DE AUTO`)) +
-  geom_bar(stat = "identity",  fill = "steelblue") +
-  geom_text(aes(label = Frecuencia), vjust = -0.5, size = 3.5) +
-  labs(title = "Distribución de marcas de autos",
-       x = "Marca de Auto",
-       y = "Frecuencia") +
-  #scale_fill_brewer(palette = "Set3") +  # Usando paleta predefinida para categorias
-  theme_minimal() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 45, hjust = 1))  # Texto en Ãngulo para mejor lectura
+# Calcular porcentajes
+tabla_frecuencias_autos$Porcentaje <- round(tabla_frecuencias_autos$Frecuencia / sum(tabla_frecuencias_autos$Frecuencia) * 100, 1)
 
-```
-**Rta: **
-La preferencia de vehículos esta distribuida entre 4 marcas que suman 83% de la muestra, estas cuatro marcas a su vez representan dos segmentos que se reparten en el mismo porcentaje 21%/21% y 20%/20%.  
-```{r}
-
-```
-
-d. Concluir cuál es la marca de auto más popular entre los clientes. 
-**Rta:**
-Se concluyen que AUDI y RENAULT son las marcas lideres con una distribución uniforme en el los clientes del concesionario en un porcentaje del 21.7 entre ambas ocupan el 42.4%.  
-```{r}
-
-tabla_frecuencias_autos$Porcentaje <- round(tabla_frecuencias_autos$Frecuencia/sum(tabla_frecuencias_autos$Frecuencia)*100, 1)
-print(tabla_frecuencias_autos)
+# Reordenar niveles
 tabla_frecuencias_autos$`MARCA DE AUTO` <- factor(
   tabla_frecuencias_autos$`MARCA DE AUTO`,
   levels = tabla_frecuencias_autos$`MARCA DE AUTO`[order(-tabla_frecuencias_autos$Frecuencia)]
 )
-# Crear el grafico circular de MARCAS AUTOS 
-ggplot(tabla_frecuencias_autos, aes(x = "", y = Frecuencia, fill = `MARCA DE AUTO`)) +
+
+# Gráfico circular
+grafico_pastel <- ggplot(tabla_frecuencias_autos, aes(x = "", y = Frecuencia, fill = `MARCA DE AUTO`)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar("y", start = 0) +
   geom_text(aes(label = paste0(Porcentaje, "%")),
@@ -260,11 +237,99 @@ ggplot(tabla_frecuencias_autos, aes(x = "", y = Frecuencia, fill = `MARCA DE AUT
             size = 4,
             color = "black",
             fontface = "bold") +
-  labs(title = "Distribucion Marcas de Autos",
+  labs(title = "Dist marcas de autos",
        fill = "MARCA DE AUTO") +
-  scale_fill_brewer(palette = "Paired") +  # Usando paleta predefinida
+  scale_fill_brewer(palette = "Paired") +
   theme_void() +
   theme(legend.position = "right",
-        plot.title = element_text(hjust = 0.5, face = "bold"))
+          legend.box = "vertical",
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+       # plot.margin = margin(0, 0, 0, 0) 
+        )
+  #+guides(fill = guide_legend(ncol = 2, title.position = "top")) 
+
+# Gráfico de barras
+grafico_barras <- ggplot(tabla_frecuencias_autos, aes(x = fct_reorder(`MARCA DE AUTO`, Frecuencia, .desc = TRUE), 
+                                                      y = Frecuencia)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = Frecuencia), vjust = -0.5, size = 3.0) +
+  labs(title = "Dist de marcas de autos",
+       x = "Marca de Auto",
+       y = "Frecuencia") +
+  theme_minimal() +
+  theme(legend.position = "button",
+        axis.text.x = element_text(angle = 45, hjust = 1), 
+        plot.title = element_text(hjust = 0.5, face = "bold")
+        )+
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
+
 ```
+
+```{r}
+ grafico_barras + grafico_pastel   + plot_layout(widths = c(4, 4.5))
+```
+
+
+d. Concluir cuál es la marca de auto más popular entre los clientes. 
+
+**Rta: **
+Se concluyen que AUDI y RENAULT son las marcas lideres con una distribución uniforme en el los clientes del concesionario en un porcentaje del 21.7 entre ambas ocupan el 42.4%.  
+
+\newpage
+
+## 4 Análisis de la variable "Edad".  
+a.	Verificar si la variable “EDAD” está correctamente importada como tipo numérico.
+
+**Rta:** La variable edad es de tipo **caracter** sin embargo su naturaleza es de tipo Cuantitativa discreta para este conjunto de datos por este motivo se va a relizar la conversión a **numeric** en la sección dedicada a normalización de datos.   
+
+```{r}
+summary(datos_base$EDAD)
+```
+
+b.	Identificar cualquier valor incorrecto (por ejemplo, texto en lugar de números) y corrija los errores.
+
+**Rta: **Se encuentran datos incosistententes por formato y **NA** se imputa la media para ambos casos, para el caso de aoutfillers se trabaja con el datos atipico de 10 años para la persona que tenia una edad de 10 años imputando la media.  
+```{r tratamiento_datos_edad, include=TRUE}
+#TRATAMIENTO DE DATOS 
+#Agrega NA a los datos que no se pueden convertir a numerico 
+datos_base$EDAD <- as.numeric(datos_base$EDAD)
+#Lista las personas que tienen problemas 24 y 28
+datos_base[is.na(datos_base$EDAD), c("PERSONA", "EDAD")]
+#Se realiza la imputacion de la media a los datos con problema
+datos_base$EDAD[is.na(datos_base$EDAD)] <- median(datos_base$EDAD, na.rm = TRUE)
+#summary(datos_base$EDAD)
+#Datos atipicos
+rango_edad <- range(datos_base$EDAD, na.rm = TRUE)
+# Mostrar dos gráficos uno al lado del otro
+par(mfrow = c(1, 2))  # 1 fila, 2 columnas
+boxplot(datos_base$EDAD, main = "Outliers en Edad", ylab = "Edad", col = "lightblue", ylim=rango_edad )
+datos_base$EDAD[datos_base$EDAD == 10] <- median(datos_base$EDAD, na.rm = TRUE)
+rango_edad <- range(datos_base$EDAD, na.rm = TRUE)
+boxplot(datos_base$EDAD, main = "Outliers ajustados en Edad", ylab = "Edad", col = "lightgreen", ylim=rango_edad)
+# Restaurar configuración gráfica a 1 gráfico por figura (opcional)
+par(mfrow = c(1, 1))
+#outliers <- boxplot.stats(datos_base$EDAD)$out ? No funciono 
+
+```
+
+
+c.	Realizar un histograma de la variable edad y describir qué patrones se observan entre los clientes (ej. ¿son jóvenes? ¿predomina alguna franja de edad?)
+
+**Rta: ** 
+- La franja de edad en la que se presentan mayor numero de clientes de concesionario estan en la edad de los 40 a los 45 años. 
+- La franja de 55 a 65 años presenta una gran numeros de clientes 
+- El sector joven no presenta una alta concentracion con excepcion de la franja de los 25-30 años
+```{r}
+# Histograma básico para la variable EDAD
+ggplot(datos_base, aes(x = EDAD)) +
+  geom_histogram(binwidth = 5,            # Ancho de cada barra: 5 años
+                 fill = "skyblue",        # Color de relleno
+                 color = "white",         # Color del borde
+                 boundary = 0) +          # Alinear límites en múltiplos de 5
+  labs(title = "Distribución de Edades",
+       x = "Edad (años)",
+       y = "Frecuencia") +
+  theme_minimal()
+```
+
 
