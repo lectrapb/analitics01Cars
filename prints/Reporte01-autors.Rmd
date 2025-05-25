@@ -290,7 +290,7 @@ b.	Identificar cualquier valor incorrecto (por ejemplo, texto en lugar de númer
 
 **Rta: **Se encuentran datos incosistententes por formato y **NA** se imputa la media para ambos casos, para el caso de aoutfillers se trabaja con el datos atipico de 10 años para la persona que tenia una edad de 10 años imputando la media.  
 ```{r tratamiento_datos_edad, include=TRUE}
-#TRATAMIENTO DE DATOS 
+#TRATAMIENTO DE DATOS EDAD 
 #Agrega NA a los datos que no se pueden convertir a numerico 
 datos_base$EDAD <- as.numeric(datos_base$EDAD)
 #Lista las personas que tienen problemas 24 y 28
@@ -320,16 +320,68 @@ c.	Realizar un histograma de la variable edad y describir qué patrones se obser
 - La franja de 55 a 65 años presenta una gran numeros de clientes 
 - El sector joven no presenta una alta concentracion con excepcion de la franja de los 25-30 años
 ```{r}
-# Histograma básico para la variable EDAD
+# Histograma con curva de densidad para la variable EDAD
+
 ggplot(datos_base, aes(x = EDAD)) +
-  geom_histogram(binwidth = 5,            # Ancho de cada barra: 5 años
-                 fill = "skyblue",        # Color de relleno
-                 color = "white",         # Color del borde
-                 boundary = 0) +          # Alinear límites en múltiplos de 5
+  geom_histogram(binwidth = 5,
+                 fill = "skyblue",
+                 color = "white",
+                 boundary = 0) +
+
+  # Añadir línea de densidad
+  geom_density(aes(y = after_stat(count) * 5), 
+               color = "red", 
+               linewidth = 1) +
   labs(title = "Distribución de Edades",
+       subtitle = "Histograma con curva de densidad",
        x = "Edad (años)",
-       y = "Frecuencia") +
-  theme_minimal()
+       y = "Frecuencia",
+       caption = "Ancho de intervalo: 5 años") +
+  # Ajustar ejes para mejorar la visualización
+  scale_x_continuous(breaks = seq(0, max(datos_base$EDAD, na.rm = TRUE) + 5, by = 5)) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(face = "bold")
+  )
+
+
 ```
+\newpage
+
+## 8 Preguntas de investigación.
+Utilizando las herramientas de RStudio (filtros, agrupaciones etc), responder a las siguientes preguntas: 
+a.	¿Cuántos clientes tienen mascota?
+
+```{r respuesta_clientes_mascota, } 
+
+no_clientes_mascota <- datos_base %>%  
+  filter(!is.na(MASCOTA) & toupper(MASCOTA) == "SI") %>% 
+  count()
+#print(no_clientes_mascota)
+```
+**Rta: **
+El numero de clientes que tiene mascota es:  **`r no_clientes_mascota `**
+
+b.	¿Cuántos clientes mayores de 25 años tienen una maestría?
+
+```{r}
+
+no_clientes_mayores_mascota <- datos_base %>% 
+  mutate(EDAD = as.numeric(EDAD)) %>% 
+  filter(!is.na(EDAD) & EDAD > 25) %>% 
+  filter( `NIVEL ESCOLAR` == "MAESTRÍA") %>%
+  count()
+    #select(PERSONA, EDAD, `NIVEL ESCOLAR`)
+```
+**Rta: **
+El numero de clientes mayores a 25 años con maestria son **`r no_clientes_mayores_mascota `** 
+
+
+c.	¿Cuántos clientes con doctorado ganan mas de 2 millones de pesos?
+**Rta: **
+d.	¿Cuál es el promedio de salario por cada categoría de la variable “MARCA DE AUTO”?
+
 
 
