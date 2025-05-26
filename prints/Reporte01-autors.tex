@@ -146,8 +146,8 @@
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\#datos\_base \textless{}{-} read\_excel("D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto{-}02{-}Autos/BASE/t1fe{-}tabla\_taller.xlsx")}
-\NormalTok{datos\_base }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"C:/Users/PC/Documents/ANALITICA/analitics01Cars/BASE/t1fe{-}tabla\_taller.xlsx"}\NormalTok{)}
+\NormalTok{datos\_base }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto{-}02{-}Autos/BASE/t1fe{-}tabla\_taller.xlsx"}\NormalTok{)}
+\CommentTok{\#datos\_base \textless{}{-} read\_excel("C:/Users/PC/Documents/ANALITICA/analitics01Cars/BASE/t1fe{-}tabla\_taller.xlsx")}
 \FunctionTok{kable}\NormalTok{(}\FunctionTok{head}\NormalTok{(datos\_base, }\DecValTok{10}\NormalTok{,  }\AttributeTok{caption =} \StringTok{"Datos iniciales"}\NormalTok{), }\AttributeTok{format =} \StringTok{"latex"}\NormalTok{, }\AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
   \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"scale\_down"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{))}
 \end{Highlighting}
@@ -388,32 +388,20 @@ auto''.}\label{anuxe1lisis-de-la-variable-marca-marca-de-auto.}
 
 \begin{Shaded}
 \begin{Highlighting}[]
- \CommentTok{\#datos\_base$\textasciigrave{}MARCA DE AUTO\textasciigrave{}(is.na)}
- \CommentTok{\#(is.na(datos\_base$\textasciigrave{}MARCA DE AUTO\textasciigrave{}))}
 \NormalTok{ data\_na\_marca\_autos }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
 \textbf{Rta:} Se tratan datos faltantes y se encuentran un total de
 \textbf{4}; se realiza tratamiento de datos remplazando los
-``na''/``NA'' a ``NO\_MANEJA'', se convierte todo mayúsculas.
+``na''/``NA'' a ``SIN\_CONFIRMAR'', se convierte todo mayúsculas.
 
 \begin{Shaded}
 \begin{Highlighting}[]
- \FunctionTok{Sys.setlocale}\NormalTok{(}\StringTok{"LC\_ALL"}\NormalTok{, }\StringTok{"Spanish\_Colombia.UTF{-}8"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] "LC_COLLATE=Spanish_Colombia.utf8;LC_CTYPE=Spanish_Colombia.utf8;LC_MONETARY=Spanish_Colombia.utf8;LC_NUMERIC=C;LC_TIME=Spanish_Colombia.utf8"
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
+ \CommentTok{\#Tratamiento datos MARCA DE AUTOS }
  \CommentTok{\#Eliminar columna 1, 2 }
 \NormalTok{ datos\_base }\OtherTok{\textless{}{-}}\NormalTok{ datos\_base[}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), ]}
  \CommentTok{\#Datos Eliminados}
- \CommentTok{\#print(datos\_base)}
 \NormalTok{ na\_marca\_autos }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{)) }
  \CommentTok{\# PERSONA 13, 32, 49, NA y datos vacios }
 \NormalTok{ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{[}\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{) }\SpecialCharTok{|}\NormalTok{ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}} \SpecialCharTok{==} \StringTok{"NA"}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"SIN\_CONFIRMAR"}
@@ -421,83 +409,69 @@ auto''.}\label{anuxe1lisis-de-la-variable-marca-marca-de-auto.}
 \NormalTok{ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{[ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}} \SpecialCharTok{==} \StringTok{"FOR"}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"FORD"}
  \CommentTok{\# PERSONA 40 cambia BWM A BMW }
 \NormalTok{ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{[ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}} \SpecialCharTok{==} \StringTok{"BWM"}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"BMW"}
- 
- \CommentTok{\#print(datos\_base)}
  \CommentTok{\# PERSONA 36 cambio a mayuscula marca }
 \NormalTok{ datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}} \OtherTok{\textless{}{-}} \FunctionTok{toupper}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{)}
- \FunctionTok{print}\NormalTok{(datos\_base)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-## # A tibble: 60 x 9
-##    PERSONA    EDAD  SEXO  ESTATURA `NIVEL ESCOLAR` `MARCA DE AUTO`
-##    <chr>      <chr> <chr> <chr>    <chr>           <chr>          
-##  1 PERSONA 1  21    M     1.54     MAESTRÍA        AUDI           
-##  2 PERSONA 2  26    F     1.55     PROFESIONAL     RENAULT        
-##  3 PERSONA 3  30    F     1.6      DOCTORADO       BMW            
-##  4 PERSONA 4  31    f     1.7      PROFESIONAL     RENAULT        
-##  5 PERSONA 5  35    M     1.71     MAESTRÍA        AUDI           
-##  6 PERSONA 6  65    M     1.8      MAESTRÍA        AUDI           
-##  7 PERSONA 7  45    M     1.54     MAESTRÍA        BMW            
-##  8 PERSONA 8  42    F     1.52     PROFESIONAL     RENAULT        
-##  9 PERSONA 9  52    F     1.51     DOCTORADO       RENAULT        
-## 10 PERSONA 10 63    M     1.65     DOCTORADO       RENAULT        
-## # i 50 more rows
-## # i 3 more variables: `NUMERO DE HIJOS` <chr>, SALARIO <dbl>, MASCOTA <chr>
-\end{verbatim}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
 \setcounter{enumi}{1}
 \tightlist
 \item
-  Crear un tabla de frecuencias para entender la popularidad de las
-  diferentes marcas entre los cliente. \textbf{Rta:} En la tabla de
-  frecuencias se observa que las marcas más populares son AUDI,
-  CHEVROLET, RENAULT y BMW. Los tres usuarios que no tienen la categoría
-  ``\,``SIN\_CONFIRMAR''\,'' se identificaron como personas a partir de
-  50 años
+  Crear una tabla de frecuencias para entender la popularidad de las
+  diferentes marcas entre los cliente.
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{tabla\_frecuencias\_autos }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{table}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{))}
-\FunctionTok{names}\NormalTok{(tabla\_frecuencias\_autos) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"MARCA DE AUTO"}\NormalTok{, }\StringTok{"Frecuencia"}\NormalTok{)}
-\CommentTok{\#Organizar Mayor a menor}
-\NormalTok{tabla\_frecuencias\_autos }\OtherTok{\textless{}{-}}\NormalTok{ tabla\_frecuencias\_autos }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(Frecuencia))}
-\FunctionTok{print}\NormalTok{(tabla\_frecuencias\_autos)}
-\end{Highlighting}
-\end{Shaded}
+\textbf{Rta: }En la tabla de frecuencias se observa que las marcas más
+populares son AUDI, CHEVROLET, RENAULT y BMW. Los tres usuarios que no
+tienen la categoría ``\,``SIN\_CONFIRMAR''\,'' se identificaron como
+personas a partir de 50 años.
 
-\begin{verbatim}
-##   MARCA DE AUTO Frecuencia
-## 1          AUDI         13
-## 2       RENAULT         13
-## 3           BMW         12
-## 4     CHEVROLET         12
-## 5          FORD          7
-## 6 SIN_CONFIRMAR          3
-\end{verbatim}
+\begin{tabular}{lr}
+\toprule
+MARCA DE AUTO & Frecuencia\\
+\midrule
+AUDI & 13\\
+RENAULT & 13\\
+BMW & 12\\
+CHEVROLET & 12\\
+FORD & 7\\
+\addlinespace
+SIN\_CONFIRMAR & 3\\
+\bottomrule
+\end{tabular}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
 \item
-  Generar graficos de barras y de tortas para visualizar la distribucion
-  de las marcas de autos y proporcionar una interpretacion. \textbf{Rta:
-  } Se identifica que las marcas de vehiculos preferidas por los
-  clientes del concesionario son \textbf{AUDi} y \textbf{RENAULT}; se
-  observa una segmentacion igual por pares entre las entre AUDI/RENAULT
-  y CHEVROLET/BMW
+  Generar gráficos de barras y de tortas para visualizar la distribución
+  de las marcas de autos y proporcionar una interpretación.
 \end{enumerate}
 
-\pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/grafico_barras_marcas-1.pdf}}
-\textbf{Rta: } La preferencia de vehículos esta distribuida entre 4
-marcas que suman 83\% de la muestra, estas cuatro marcas a su vez
-representan dos segmentos que se reparten en el mismo porcentaje
-21\%/21\% y 20\%/20\%.
+\textbf{Rta: } - Se identifica que las marcas de vehículos preferidas
+por los clientes del concesionario son \textbf{AUDI} y \textbf{RENAULT};
+se observa una segmentación igual por pares entre las entre AUDI/RENAULT
+y CHEVROLET/BMW
+
+\begin{itemize}
+\tightlist
+\item
+  La preferencia de vehículos esta distribuida entre 4 marcas que suman
+  83\% de la muestra, estas cuatro marcas a su vez representan dos
+  segmentos que se reparten en el mismo porcentaje 21\%/21\% y
+  20\%/20\%.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ grafico\_barras }\SpecialCharTok{+}\NormalTok{ grafico\_pastel   }\SpecialCharTok{+} \FunctionTok{plot\_layout}\NormalTok{(}\AttributeTok{widths =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\FloatTok{4.5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/unnamed-chunk-4-1.pdf}}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
@@ -505,53 +479,155 @@ representan dos segmentos que se reparten en el mismo porcentaje
 \tightlist
 \item
   Concluir cuál es la marca de auto más popular entre los clientes.
-  \textbf{Rta:} Se concluyen que AUDI y RENAULT son las marcas lideres
-  con una distribución uniforme en el los clientes del concesionario en
-  un porcentaje del 21.7 entre ambas ocupan el 42.4\%.
 \end{enumerate}
+
+\textbf{Rta: } Se concluyen que AUDI y RENAULT son las marcas lideres
+con una distribución uniforme en el los clientes del concesionario en un
+porcentaje del 21.7 entre ambas ocupan el 42.4\%.
+
+\newpage
+
+\subsection{4 Análisis de la variable
+``Edad''.}\label{anuxe1lisis-de-la-variable-edad.}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Verificar si la variable ``EDAD'' está correctamente importada como
+  tipo numérico.
+\end{enumerate}
+
+\textbf{Rta:} La variable edad es de tipo \textbf{caracter} sin embargo
+su naturaleza es de tipo Cuantitativa discreta para este conjunto de
+datos por este motivo se va a relizar la conversión a \textbf{numeric}
+en la sección dedicada a normalización de datos.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tabla\_frecuencias\_autos}\SpecialCharTok{$}\NormalTok{Porcentaje }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(tabla\_frecuencias\_autos}\SpecialCharTok{$}\NormalTok{Frecuencia}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(tabla\_frecuencias\_autos}\SpecialCharTok{$}\NormalTok{Frecuencia)}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }\DecValTok{1}\NormalTok{)}
-\FunctionTok{print}\NormalTok{(tabla\_frecuencias\_autos)}
+\FunctionTok{summary}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-##   MARCA DE AUTO Frecuencia Porcentaje
-## 1          AUDI         13       21.7
-## 2       RENAULT         13       21.7
-## 3           BMW         12       20.0
-## 4     CHEVROLET         12       20.0
-## 5          FORD          7       11.7
-## 6 SIN_CONFIRMAR          3        5.0
+##    Length     Class      Mode 
+##        60 character character
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Identificar cualquier valor incorrecto (por ejemplo, texto en lugar de
+  números) y corrija los errores.
+\end{enumerate}
+
+\textbf{Rta: }Se encuentran datos incosistententes por formato y
+\textbf{NA} se imputa la media para ambos casos, para el caso de
+aoutfillers se trabaja con el datos atipico de 10 años para la persona
+que tenia una edad de 10 años imputando la media.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#TRATAMIENTO DE DATOS EDAD }
+\CommentTok{\#Agrega NA a los datos que no se pueden convertir a numerico }
+\NormalTok{datos\_base}\SpecialCharTok{$}\NormalTok{EDAD }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: NAs introducidos por coerción
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tabla\_frecuencias\_autos}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}} \OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(}
-\NormalTok{  tabla\_frecuencias\_autos}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{,}
-  \AttributeTok{levels =}\NormalTok{ tabla\_frecuencias\_autos}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{[}\FunctionTok{order}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{tabla\_frecuencias\_autos}\SpecialCharTok{$}\NormalTok{Frecuencia)]}
-\NormalTok{)}
-\CommentTok{\# Crear el grafico circular de MARCAS AUTOS }
-\FunctionTok{ggplot}\NormalTok{(tabla\_frecuencias\_autos, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \StringTok{""}\NormalTok{, }\AttributeTok{y =}\NormalTok{ Frecuencia, }\AttributeTok{fill =} \StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{)) }\SpecialCharTok{+}
-  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{stat =} \StringTok{"identity"}\NormalTok{, }\AttributeTok{width =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
-  \FunctionTok{coord\_polar}\NormalTok{(}\StringTok{"y"}\NormalTok{, }\AttributeTok{start =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{+}
-  \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =} \FunctionTok{paste0}\NormalTok{(Porcentaje, }\StringTok{"\%"}\NormalTok{)),}
-            \AttributeTok{position =} \FunctionTok{position\_stack}\NormalTok{(}\AttributeTok{vjust =} \FloatTok{0.5}\NormalTok{),}
-            \AttributeTok{size =} \DecValTok{4}\NormalTok{,}
-            \AttributeTok{color =} \StringTok{"black"}\NormalTok{,}
-            \AttributeTok{fontface =} \StringTok{"bold"}\NormalTok{) }\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Distribucion Marcas de Autos"}\NormalTok{,}
-       \AttributeTok{fill =} \StringTok{"MARCA DE AUTO"}\NormalTok{) }\SpecialCharTok{+}
-  \FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Paired"}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# Usando paleta predefinida}
-  \FunctionTok{theme\_void}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"right"}\NormalTok{,}
-        \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{))}
+\CommentTok{\#Lista las personas que tienen problemas 24 y 28}
+\NormalTok{datos\_base[}\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD), }\FunctionTok{c}\NormalTok{(}\StringTok{"PERSONA"}\NormalTok{, }\StringTok{"EDAD"}\NormalTok{)]}
 \end{Highlighting}
 \end{Shaded}
 
-\pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/unnamed-chunk-7-1.pdf}}
+\begin{verbatim}
+## # A tibble: 2 x 2
+##   PERSONA     EDAD
+##   <chr>      <dbl>
+## 1 PERSONA 24    NA
+## 2 PERSONA 28    NA
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Se realiza la imputacion de la media a los datos con problema}
+\NormalTok{datos\_base}\SpecialCharTok{$}\NormalTok{EDAD[}\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD)] }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\CommentTok{\#summary(datos\_base$EDAD)}
+\CommentTok{\#Datos atipicos}
+\NormalTok{rango\_edad }\OtherTok{\textless{}{-}} \FunctionTok{range}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\CommentTok{\# Mostrar dos gráficos uno al lado del otro}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))  }\CommentTok{\# 1 fila, 2 columnas}
+\FunctionTok{boxplot}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD, }\AttributeTok{main =} \StringTok{"Outliers en Edad"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Edad"}\NormalTok{, }\AttributeTok{col =} \StringTok{"lightblue"}\NormalTok{, }\AttributeTok{ylim=}\NormalTok{rango\_edad )}
+\NormalTok{datos\_base}\SpecialCharTok{$}\NormalTok{EDAD[datos\_base}\SpecialCharTok{$}\NormalTok{EDAD }\SpecialCharTok{==} \DecValTok{10}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{rango\_edad }\OtherTok{\textless{}{-}} \FunctionTok{range}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{boxplot}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD, }\AttributeTok{main =} \StringTok{"Outliers ajustados en Edad"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Edad"}\NormalTok{, }\AttributeTok{col =} \StringTok{"lightgreen"}\NormalTok{, }\AttributeTok{ylim=}\NormalTok{rango\_edad)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/tratamiento_datos_edad-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Restaurar configuración gráfica a 1 gráfico por figura (opcional)}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\CommentTok{\#outliers \textless{}{-} boxplot.stats(datos\_base$EDAD)$out ? No funciono }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Realizar un histograma de la variable edad y describir qué patrones se
+  observan entre los clientes (ej. ¿son jóvenes? ¿predomina alguna
+  franja de edad?)
+\end{enumerate}
+
+\textbf{Rta: } - La franja de edad en la que se presentan mayor numero
+de clientes de concesionario estan en la edad de los 40 a los 45 años. -
+La franja de 55 a 65 años presenta una gran numeros de clientes - El
+sector joven no presenta una alta concentracion con excepcion de la
+franja de los 25-30 años
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Histograma con curva de densidad para la variable EDAD}
+
+\FunctionTok{ggplot}\NormalTok{(datos\_base, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ EDAD)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth =} \DecValTok{5}\NormalTok{,}
+                 \AttributeTok{fill =} \StringTok{"skyblue"}\NormalTok{,}
+                 \AttributeTok{color =} \StringTok{"white"}\NormalTok{,}
+                 \AttributeTok{boundary =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{+}
+
+  \CommentTok{\# Añadir línea de densidad}
+  \FunctionTok{geom\_density}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =} \FunctionTok{after\_stat}\NormalTok{(count) }\SpecialCharTok{*} \DecValTok{5}\NormalTok{), }
+               \AttributeTok{color =} \StringTok{"red"}\NormalTok{, }
+               \AttributeTok{linewidth =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Distribución de Edades"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"Histograma con curva de densidad"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Edad (años)"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Frecuencia"}\NormalTok{,}
+       \AttributeTok{caption =} \StringTok{"Ancho de intervalo: 5 años"}\NormalTok{) }\SpecialCharTok{+}
+  \CommentTok{\# Ajustar ejes para mejorar la visualización}
+  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{breaks =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FunctionTok{max}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{+} \DecValTok{5}\NormalTok{, }\AttributeTok{by =} \DecValTok{5}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{face =} \StringTok{"bold"}\NormalTok{, }\AttributeTok{size =} \DecValTok{14}\NormalTok{),}
+    \AttributeTok{plot.subtitle =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{12}\NormalTok{),}
+    \AttributeTok{axis.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{face =} \StringTok{"bold"}\NormalTok{)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/unnamed-chunk-6-1.pdf}}
 \newpage
 
 \subsection{5 Análisis de la variable
@@ -559,17 +635,233 @@ representan dos segmentos que se reparten en el mismo porcentaje
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
+\tightlist
 \item
   Revisar la variable ``ESTATURA'' para asegurar que este correctamente
-  importada y limpia. \textbf{Rta:}
+  importada y limpia. \textbf{Rta:} Se puede observar que la variable
+  ESTATURA se encuentra con 60 registros de tipo numeric, sin registros
+  de na y con valores ajustados dentro de las estaturas promedio, ya que
+  se homologo un valor que se encontraba por fuera del valor posible en
+  la edad de una persona.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#TRATAMIENTO DE DATOS ESTATURA }
+\CommentTok{\#Se convierte a numerico el dato caracter}
+\NormalTok{datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA)}
+\CommentTok{\#Datos atipicos}
+\NormalTok{rango\_estatura }\OtherTok{\textless{}{-}} \FunctionTok{range}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\CommentTok{\# Mostrar dos gráficos uno al lado del otro}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))  }\CommentTok{\# 1 fila, 2 columnas}
+  \FunctionTok{boxplot}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA, }
+          \AttributeTok{main =} \StringTok{"Outliers en Estatura"}\NormalTok{, }
+          \AttributeTok{ylab =} \StringTok{"Estatura"}\NormalTok{, }
+          \AttributeTok{col =} \StringTok{"lightblue"}\NormalTok{, }
+          \AttributeTok{ylim =}\NormalTok{ rango\_estatura )}
+  \CommentTok{\#Se reemplaza el valor especifico de la columna ESTATURA en la persona 31 por la media }
+\NormalTok{  media\_sin\_atipicos }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA[datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA }\SpecialCharTok{!=} \FloatTok{3.5}\NormalTok{], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA[datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA }\SpecialCharTok{==} \FloatTok{3.450}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{ media\_sin\_atipicos}
+\NormalTok{  rango\_estatura }\OtherTok{\textless{}{-}} \FunctionTok{range}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+  \FunctionTok{boxplot}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA, }
+          \AttributeTok{main =} \StringTok{"Outliers ajustados en ESTATURA"}\NormalTok{,}
+          \AttributeTok{ylab =} \StringTok{"Estatura"}\NormalTok{, }\AttributeTok{col =} \StringTok{"lightgreen"}\NormalTok{, }\AttributeTok{ylim =}\NormalTok{rango\_estatura)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/unnamed-chunk-7-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \CommentTok{\# Restaurar configuración gráfica a 1 gráfico por figura (opcional)}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#confirmación del tipo de dato}
+\FunctionTok{class}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Se confirma que no tiene na}
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Se confirma estructura y media de la variable}
+\FunctionTok{summary}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   1.490   1.540   1.650   1.655   1.760   1.810
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
 \item
   Identificar los datos faltantes o valores inconsistentes. Eliminar
-  esos registros. \textbf{Rta:}
+  esos registros. \textbf{Rta:} En el anterior respuesta se evidencia
+  que se identifico el registro de un dato atipico con valor de 3.450 en
+  estatura, y se homologo por el valor de la media de los registros
+  1,685
 \item
   Generar un poligono de frecuencia y una ojiva para analizar la
   distribución de la estatura de los clientes y extraer conclusiones.
   \textbf{Rta:}
 \end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{ESTATURA)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 1.54 1.55 1.60 1.70 1.71 1.80 1.54 1.52 1.51 1.65 1.78 1.76 1.65 1.73 1.71
+## [16] 1.80 1.81 1.60 1.51 1.52 1.63 1.76 1.79 1.54 1.78 1.59 1.57 1.60 1.54 1.52
+## [31] 1.65 1.52 1.50 1.68 1.78 1.60 1.68 1.80 1.78 1.65 1.71 1.80 1.53 1.52 1.50
+## [46] 1.65 1.78 1.76 1.65 1.73 1.71 1.80 1.81 1.49 1.54 1.58 1.60 1.70 1.71 1.80
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Polígono de frencuencias (sencillo)}
+
+\CommentTok{\# Polígono de frecuencias con intervalos automáticos}
+\FunctionTok{ggplot}\NormalTok{(datos\_base, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ ESTATURA)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_freqpoly}\NormalTok{(}\AttributeTok{binwidth =} \DecValTok{5}\NormalTok{, }\AttributeTok{color =} \StringTok{"steelblue"}\NormalTok{, }\AttributeTok{size =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Polígono de Frecuencias {-} Estatura"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Estatura (metros)"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Frecuencia"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## i Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/unnamed-chunk-9-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   20.00   35.00   45.00   44.83   56.25   68.00
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{datos\_base}\SpecialCharTok{$}\NormalTok{EDAD }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD)}
+\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{EDAD)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [13] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [25] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [37] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [49] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Polígono de frecuencias con intervalos automáticos}
+\FunctionTok{ggplot}\NormalTok{(datos\_base, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ EDAD)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_freqpoly}\NormalTok{(}\AttributeTok{binwidth =} \DecValTok{5}\NormalTok{, }\AttributeTok{color =} \StringTok{"steelblue"}\NormalTok{, }\AttributeTok{size =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Polígono de Frecuencias {-} Estatura"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Estatura (metros)"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Frecuencia"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/unnamed-chunk-9-2.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Polígono de frecuencias detallado por intervalos }
+
+\CommentTok{\# Crear intervalos para Estatura}
+\CommentTok{\#intervalos\_estatura \textless{}{-} seq(from = floor(min(datos\_base$ESTATURA, na.rm = TRUE)/5)*5,}
+\CommentTok{\#                       to = ceiling(max(datos\_base$ESTATURA, na.rm = TRUE)/5)*5,}
+\CommentTok{\#                       by = 5)\textasciigrave{}\textasciigrave{}\textasciigrave{}\{r\}}
+\CommentTok{\#                       print(intervalos\_estatura)}
+
+
+
+\CommentTok{\# Extraer los valores medios de cada intervalo para el eje X}
+\CommentTok{\#tabla\_freq\_edad$Valor\_Medio \textless{}{-} as.numeric(sapply(tabla\_freq\_edad$Grupo\_Edad, function(x) \{}
+\CommentTok{\#  rango \textless{}{-} as.character(x)}
+\CommentTok{\#  limites \textless{}{-} as.numeric(unlist(strsplit(gsub("\textbackslash{}\textbackslash{}[|\textbackslash{}\textbackslash{})|\textbackslash{}\textbackslash{}[|\textbackslash{}\textbackslash{}]", "", rango), ",")))}
+\CommentTok{\#  return(mean(limites))}
+\CommentTok{\#\}))}
+
+\CommentTok{\#Crear polígono de frecuencias}
+\CommentTok{\# ggplot(tabla\_freq\_edad, aes(x = Valor\_Medio, y = Frecuencia, group = 1)) +}
+\CommentTok{\#   geom\_point(size = 3, color = "steelblue") +}
+\CommentTok{\#   geom\_line(color = "steelblue", size = 1) +}
+\CommentTok{\#   geom\_text(aes(label = Frecuencia), vjust = {-}0.8, size = 3.5) +}
+\CommentTok{\#   labs(title = "Polígono de Frecuencias {-} Edad por Grupos",}
+\CommentTok{\#        x = "Edad (años)",}
+\CommentTok{\#        y = "Frecuencia") +}
+\CommentTok{\#   scale\_x\_continuous(breaks = tabla\_freq\_edad$Valor\_Medio,}
+\CommentTok{\#                      labels = as.character(tabla\_freq\_edad$Grupo\_Edad)) +}
+\CommentTok{\#   theme\_minimal() +}
+\CommentTok{\#   theme(axis.text.x = element\_text(angle = 45, hjust = 1))}
+\CommentTok{\#   }
+\CommentTok{\#   OJIVA }
+\CommentTok{\#Ojiva de frencuencias acumuladas}
+
+\CommentTok{\# Crear intervalos y calcular frecuencias acumuladas en un solo paso}
+\CommentTok{\#histData \textless{}{-} hist(datos\_base$ESTATURA, breaks = seq(min(datos\_base$ESTATURA, na.rm = TRUE), }
+\CommentTok{\#                                         max(datos\_base$ESTATURA, na.rm = TRUE) + 5, }
+\CommentTok{\#                                         by = 5), }
+\CommentTok{\#                plot = FALSE)}
+
+\CommentTok{\# Crear dataframe para la ojiva}
+\CommentTok{\#ojiva\_data \textless{}{-} data.frame(}
+\CommentTok{\#  x = histData$breaks,}
+\CommentTok{\#  y = c(0, cumsum(histData$counts))}
+\CommentTok{\#)}
+
+\CommentTok{\# Graficar ojiva}
+\CommentTok{\#ggplot(ojiva\_data, aes(x = x, y = y)) +}
+\CommentTok{\#  geom\_line(color = "darkred", size = 1) +}
+\CommentTok{\#  geom\_point(color = "darkred", size = 3) +}
+\CommentTok{\#  labs(title = "Ojiva {-} Frecuencias Acumuladas de Estatura",}
+\CommentTok{\#       x = "Estatura (metros)",}
+\CommentTok{\#       y = "Frecuencia Acumulada") +}
+\CommentTok{\#  theme\_minimal()}
+\CommentTok{\#print(datos\_base)}
+\end{Highlighting}
+\end{Shaded}
 
 \newpage
 
@@ -578,16 +870,173 @@ hijos''.}\label{anuxe1lisis-de-la-variable-numero-de-hijos.}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
+\tightlist
 \item
-  Cambiar el nombre de l varaible a ``n.hijos'' para facilitar su
-  manejo. \textbf{Rta:}
+  Cambiar el nombre de la varaible a ``n.hijos'' para facilitar su
+  manejo. \textbf{Rta:} Se realiza consulta de lal data frame original,
+  posteriormente se le aplica el tratamiento solicitado guardando el
+  resultado en un nuevo dataframe y por ultimo se consulta el dataframe
+  creado para evidenciar el resultado.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(datos\_base)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 60 x 9
+##    PERSONA     EDAD SEXO  ESTATURA `NIVEL ESCOLAR` `MARCA DE AUTO`
+##    <chr>      <dbl> <chr>    <dbl> <chr>           <chr>          
+##  1 PERSONA 1     21 M         1.54 MAESTRÍA        AUDI           
+##  2 PERSONA 2     26 F         1.55 PROFESIONAL     RENAULT        
+##  3 PERSONA 3     30 F         1.6  DOCTORADO       BMW            
+##  4 PERSONA 4     31 f         1.7  PROFESIONAL     RENAULT        
+##  5 PERSONA 5     35 M         1.71 MAESTRÍA        AUDI           
+##  6 PERSONA 6     65 M         1.8  MAESTRÍA        AUDI           
+##  7 PERSONA 7     45 M         1.54 MAESTRÍA        BMW            
+##  8 PERSONA 8     42 F         1.52 PROFESIONAL     RENAULT        
+##  9 PERSONA 9     52 F         1.51 DOCTORADO       RENAULT        
+## 10 PERSONA 10    63 M         1.65 DOCTORADO       RENAULT        
+## # i 50 more rows
+## # i 3 more variables: `NUMERO DE HIJOS` <chr>, SALARIO <dbl>, MASCOTA <chr>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nueva\_datos\_base }\OtherTok{\textless{}{-}}
+  \FunctionTok{rename}\NormalTok{(datos\_base,}\AttributeTok{N\_HIJOS=}\StringTok{"NUMERO DE HIJOS"}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(nueva\_datos\_base)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 60 x 9
+##    PERSONA   EDAD SEXO  ESTATURA `NIVEL ESCOLAR` `MARCA DE AUTO` N_HIJOS SALARIO
+##    <chr>    <dbl> <chr>    <dbl> <chr>           <chr>           <chr>     <dbl>
+##  1 PERSONA~    21 M         1.54 MAESTRÍA        AUDI            0       1200000
+##  2 PERSONA~    26 F         1.55 PROFESIONAL     RENAULT         5       1250000
+##  3 PERSONA~    30 F         1.6  DOCTORADO       BMW             2        900000
+##  4 PERSONA~    31 f         1.7  PROFESIONAL     RENAULT         2        800000
+##  5 PERSONA~    35 M         1.71 MAESTRÍA        AUDI            1        950000
+##  6 PERSONA~    65 M         1.8  MAESTRÍA        AUDI            1       2000000
+##  7 PERSONA~    45 M         1.54 MAESTRÍA        BMW             1       2500000
+##  8 PERSONA~    42 F         1.52 PROFESIONAL     RENAULT         1       3500000
+##  9 PERSONA~    52 F         1.51 DOCTORADO       RENAULT         0       4700000
+## 10 PERSONA~    63 M         1.65 DOCTORADO       RENAULT         0       5000000
+## # i 50 more rows
+## # i 1 more variable: MASCOTA <chr>
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
 \item
   Identificar problemas con los datos y eliminar valores inconsistentes.
-  \textbf{Rta:}
+  \textbf{Rta:} Se identifica que la persona 24 tiene NA en la variable
+  hijos, por lo que le aplica el tratamiento y se iguala a 0
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Sys.setlocale}\NormalTok{(}\StringTok{"LC\_ALL"}\NormalTok{, }\StringTok{"es\_CO.UTF{-}8"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "LC_COLLATE=es_CO.UTF-8;LC_CTYPE=es_CO.UTF-8;LC_MONETARY=es_CO.UTF-8;LC_NUMERIC=C;LC_TIME=es_CO.UTF-8"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Se identificarn problemas }
+\NormalTok{datos\_base[}\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{NUMERO DE HIJOS}\StringTok{\textasciigrave{}}\NormalTok{) }\SpecialCharTok{|} 
+\NormalTok{           datos\_base}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{NUMERO DE HIJOS}\StringTok{\textasciigrave{}} \SpecialCharTok{==} \StringTok{"NA"}\NormalTok{, }
+           \FunctionTok{c}\NormalTok{(}\StringTok{"PERSONA"}\NormalTok{, }\StringTok{"NUMERO DE HIJOS"}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 2
+##   PERSONA    `NUMERO DE HIJOS`
+##   <chr>      <chr>            
+## 1 PERSONA 21 <NA>             
+## 2 PERSONA 24 NA
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(nueva\_datos\_base)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 60 x 9
+##    PERSONA   EDAD SEXO  ESTATURA `NIVEL ESCOLAR` `MARCA DE AUTO` N_HIJOS SALARIO
+##    <chr>    <dbl> <chr>    <dbl> <chr>           <chr>           <chr>     <dbl>
+##  1 PERSONA~    21 M         1.54 MAESTRÍA        AUDI            0       1200000
+##  2 PERSONA~    26 F         1.55 PROFESIONAL     RENAULT         5       1250000
+##  3 PERSONA~    30 F         1.6  DOCTORADO       BMW             2        900000
+##  4 PERSONA~    31 f         1.7  PROFESIONAL     RENAULT         2        800000
+##  5 PERSONA~    35 M         1.71 MAESTRÍA        AUDI            1        950000
+##  6 PERSONA~    65 M         1.8  MAESTRÍA        AUDI            1       2000000
+##  7 PERSONA~    45 M         1.54 MAESTRÍA        BMW             1       2500000
+##  8 PERSONA~    42 F         1.52 PROFESIONAL     RENAULT         1       3500000
+##  9 PERSONA~    52 F         1.51 DOCTORADO       RENAULT         0       4700000
+## 10 PERSONA~    63 M         1.65 DOCTORADO       RENAULT         0       5000000
+## # i 50 more rows
+## # i 1 more variable: MASCOTA <chr>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Se identifica que la persona 24 tiene NA en la variable hijos, }
+\CommentTok{\#por lo que le aplica el tratamiento y se iguala a 0}
+\NormalTok{nueva\_datos\_base}\SpecialCharTok{$}\NormalTok{N\_HIJOS[}\FunctionTok{is.na}\NormalTok{(nueva\_datos\_base}\SpecialCharTok{$}\NormalTok{N\_HIJOS) }\SpecialCharTok{|} 
+\NormalTok{                               nueva\_datos\_base}\SpecialCharTok{$}\NormalTok{N\_HIJOS }\SpecialCharTok{==} \StringTok{"NA"}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"0"}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
 \item
   Generar una grafica de barras con colores y analizar que se puede
   concluir sobre el numero de hijos de los clientes. \textbf{Rta:}
 \end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tabla\_frecuencias\_hijos }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{table}\NormalTok{(nueva\_datos\_base}\SpecialCharTok{$}\NormalTok{N\_HIJOS))}
+\FunctionTok{names}\NormalTok{(tabla\_frecuencias\_hijos) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"N\_HIJOS"}\NormalTok{, }\StringTok{"Frecuencia"}\NormalTok{)}
+\CommentTok{\#Organizar Mayor a menor}
+\NormalTok{tabla\_frecuencias\_hijos }\OtherTok{\textless{}{-}}\NormalTok{ tabla\_frecuencias\_hijos }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(Frecuencia))}
+
+\CommentTok{\# Gráfico de barras}
+\FunctionTok{ggplot}\NormalTok{(tabla\_frecuencias\_hijos, }
+       \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{fct\_reorder}\NormalTok{(}\StringTok{\textasciigrave{}}\AttributeTok{N\_HIJOS}\StringTok{\textasciigrave{}}\NormalTok{, Frecuencia, }\AttributeTok{.desc =} \ConstantTok{TRUE}\NormalTok{), }
+           \AttributeTok{y =}\NormalTok{ Frecuencia,}
+           \AttributeTok{fill =} \StringTok{\textasciigrave{}}\AttributeTok{N\_HIJOS}\StringTok{\textasciigrave{}}\NormalTok{)) }\SpecialCharTok{+}  \CommentTok{\# \textless{}{-} Aquí se asigna color por categoría}
+  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{stat =} \StringTok{"identity"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =}\NormalTok{ Frecuencia), }\AttributeTok{vjust =} \SpecialCharTok{{-}}\FloatTok{0.5}\NormalTok{, }\AttributeTok{size =} \FloatTok{3.0}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Dist numero hijos"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Numero hijos"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Frecuencia"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Set3"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,  }\CommentTok{\# O "bottom" si deseas mostrarla}
+    \AttributeTok{axis.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{angle =} \DecValTok{45}\NormalTok{, }\AttributeTok{hjust =} \DecValTok{1}\NormalTok{), }
+    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{expand =} \FunctionTok{expansion}\NormalTok{(}\AttributeTok{mult =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.15}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/unnamed-chunk-13-1.pdf}}
 
 \newpage
 
@@ -596,10 +1045,55 @@ hijos''.}\label{anuxe1lisis-de-la-variable-numero-de-hijos.}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
+\tightlist
 \item
   Revisar la consistencia de los datos de la varaible ``SEXO'' y
   realizar correcciones en caso de encontrar valores inusuales o
   inconsistentes. \textbf{Rta:}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{is.na}\NormalTok{(datos\_base}\SpecialCharTok{$}\NormalTok{SEXO)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [13] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [25] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+## [37] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [49] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(nueva\_datos\_base)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 60 x 9
+##    PERSONA   EDAD SEXO  ESTATURA `NIVEL ESCOLAR` `MARCA DE AUTO` N_HIJOS SALARIO
+##    <chr>    <dbl> <chr>    <dbl> <chr>           <chr>           <chr>     <dbl>
+##  1 PERSONA~    21 M         1.54 MAESTRÍA        AUDI            0       1200000
+##  2 PERSONA~    26 F         1.55 PROFESIONAL     RENAULT         5       1250000
+##  3 PERSONA~    30 F         1.6  DOCTORADO       BMW             2        900000
+##  4 PERSONA~    31 f         1.7  PROFESIONAL     RENAULT         2        800000
+##  5 PERSONA~    35 M         1.71 MAESTRÍA        AUDI            1        950000
+##  6 PERSONA~    65 M         1.8  MAESTRÍA        AUDI            1       2000000
+##  7 PERSONA~    45 M         1.54 MAESTRÍA        BMW             1       2500000
+##  8 PERSONA~    42 F         1.52 PROFESIONAL     RENAULT         1       3500000
+##  9 PERSONA~    52 F         1.51 DOCTORADO       RENAULT         0       4700000
+## 10 PERSONA~    63 M         1.65 DOCTORADO       RENAULT         0       5000000
+## # i 50 more rows
+## # i 1 more variable: MASCOTA <chr>
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
 \item
   Crea una tabla de frecuencias y extraer conclusiones sobre la
   proporcion de hombres y mujeres en el conjunto de clientes.
@@ -609,17 +1103,103 @@ hijos''.}\label{anuxe1lisis-de-la-variable-numero-de-hijos.}
 \newpage
 
 \subsection{8 Preguntas de
-investigación''.}\label{preguntas-de-investigaciuxf3n.}
+investigación.}\label{preguntas-de-investigaciuxf3n.}
+
+Utilizando las herramientas de RStudio (filtros, agrupaciones etc),
+responder a las siguientes preguntas: a. ¿Cuántos clientes tienen
+mascota?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{no\_clientes\_mascota }\OtherTok{\textless{}{-}}\NormalTok{ datos\_base }\SpecialCharTok{\%\textgreater{}\%}  
+  \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(MASCOTA) }\SpecialCharTok{\&} \FunctionTok{toupper}\NormalTok{(MASCOTA) }\SpecialCharTok{==} \StringTok{"SI"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{count}\NormalTok{()}
+\CommentTok{\#print(no\_clientes\_mascota)}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Rta: } El numero de clientes que tiene mascota es: \textbf{30}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  ¿Cuántos clientes mayores de 25 años tienen una maestría?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{no\_clientes\_mayores\_mascota }\OtherTok{\textless{}{-}}\NormalTok{ datos\_base }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{EDAD =} \FunctionTok{as.numeric}\NormalTok{(EDAD)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(EDAD) }\SpecialCharTok{\&}\NormalTok{ EDAD }\SpecialCharTok{\textgreater{}} \DecValTok{25}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{( }\StringTok{\textasciigrave{}}\AttributeTok{NIVEL ESCOLAR}\StringTok{\textasciigrave{}} \SpecialCharTok{==} \StringTok{"MAESTRÍA"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+    \CommentTok{\#select(PERSONA, EDAD, \textasciigrave{}NIVEL ESCOLAR\textasciigrave{})}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Rta: } El numero de clientes mayores a 25 años con maestria son
+\textbf{17}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
 \setcounter{enumi}{2}
+\tightlist
 \item
-  ¿Cuantos clientes con doctorado ganan mas de 2 millones de pesos?
-  \textbf{Rta:}
-\item
-  ¿Cual es el promedio de salario por cada categoria de variable ``MARCA
-  DE AUTO''? \textbf{Rta:}
+  ¿Cuántos clientes con doctorado ganan mas de 2 millones de pesos?
 \end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#print(datos\_base)}
+\CommentTok{\#datos\_clientes\_doctorado\textless{}{-} sum(datos\_base$\textasciigrave{}NIVEL ESCOLAR\textasciigrave{} == "DOCTORADO") \%\textgreater{}\% filter(datos\_base$SALARIO\textgreater{}2000000)}
+\NormalTok{no\_clientes\_doctorado }\OtherTok{\textless{}{-}}\NormalTok{ datos\_base }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(}\StringTok{\textasciigrave{}}\AttributeTok{NIVEL ESCOLAR}\StringTok{\textasciigrave{}} \SpecialCharTok{==} \StringTok{"DOCTORADO"} \SpecialCharTok{\&}\NormalTok{ SALARIO }\SpecialCharTok{\textgreater{}} \DecValTok{2000000}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{count}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Rta: } El numero de clientes con doctorado y salario superior a
+\$2'000.000 es: 13
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  ¿Cuál es el promedio de salario por cada categoría de la variable
+  ``MARCA DE AUTO''?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{salario\_promedio\_por\_marca\_auto }\OtherTok{\textless{}{-}}\NormalTok{ datos\_base }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(}\StringTok{\textasciigrave{}}\AttributeTok{MARCA DE AUTO}\StringTok{\textasciigrave{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{promedio\_salario =} \FunctionTok{mean}\NormalTok{(SALARIO, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}
+\FunctionTok{kable}\NormalTok{(salario\_promedio\_por\_marca\_auto, }\AttributeTok{caption =} \StringTok{"Promedio de Salario por Marca de Auto"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{full\_width =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{position =} \StringTok{"left"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[l]{lr}
+\caption{\label{tab:unnamed-chunk-17}Promedio de Salario por Marca de Auto}\\
+\toprule
+MARCA DE AUTO & promedio\_salario\\
+\midrule
+AUDI & 2226923\\
+BMW & 2441667\\
+CHEVROLET & 4500000\\
+FORD & 5114286\\
+RENAULT & 3057692\\
+\addlinespace
+SIN\_CONFIRMAR & 3133333\\
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#print(salario\_promedio\_por\_marca\_auto)}
+\end{Highlighting}
+\end{Shaded}
+
 
 \end{document}

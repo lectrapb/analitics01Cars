@@ -23,9 +23,8 @@ knitr::opts_chunk$set(echo = TRUE)
 #install.packages("dplyr")
 #install.packages("knitr")
 install.packages("kableExtra")
-#install.packages("tinytex")
-#tinytex::install_tinytex()
-
+install.packages("tinytex")
+install.packages("patchwork")
 ```
 
 
@@ -38,6 +37,7 @@ library(knitr)
 library(DT)
 library(kableExtra)
 library(forcats)
+library(patchwork)
 ```
 
 ## 2 Exploracion de datos 
@@ -47,8 +47,8 @@ b. Cargar el archivo de datos en RStudio
 
 **Rta:** Carga de datos inicial 
 ```{r carga de datos inicial, include=TRUE}
-#datos_base <- read_excel("D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto-02-Autos/BASE/t1fe-tabla_taller.xlsx")
-datos_base <- read_excel("C:/Users/PC/Documents/ANALITICA/analitics01Cars/BASE/t1fe-tabla_taller.xlsx")
+datos_base <- read_excel("D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto-02-Autos/BASE/t1fe-tabla_taller.xlsx")
+#datos_base <- read_excel("C:/Users/PC/Documents/ANALITICA/analitics01Cars/BASE/t1fe-tabla_taller.xlsx")
 kable(head(datos_base, 10,  caption = "Datos iniciales"), format = "latex", booktabs = TRUE) %>% 
   kable_styling(latex_options = c("scale_down", "hold_position"))
 ```
@@ -132,43 +132,6 @@ f. Comentar sobre los posibles problemas en los datos:
   - PERSONA 31: valor de ESTATURA = 3.45 m, fuera del rango fisiológico normal.
   - PERSONA 33: valor de NUMERO DE HIJOS = 54, ampliamente fuera del promedio observado (3.03).
   
-```{r observaciones, include=FALSE}
-## Observaciones
-
-#1. Las dos primeras filas se pueden eliminar ya que no cuentan con datos.
-#2. La PERSONA 15 tiene en la variable **SEXO** el valor de **MUJER**, que es inconsistente.
-#3. La PERSONA 31 tiene en la variable **SEXO** el valor de **nan**, que es inconsistente.
-#4. La PERSONA 32 tiene en la variable **SEXO** el valor de **HOMBRE**, que es inconsistente.
-#5. La PERSONA 36 tiene en la variable **SEXO** el valor de **m**, que es inconsistente.
-#6. La PERSONA 37 tiene en la variable **SEXO** el valor de **m**, que es inconsistente.
-#7. La PERSONA 38 tiene en la variable **SEXO** el valor de **mujer**, que es inconsistente.
-#8. La PERSONA 39 tiene en la variable **SEXO** el valor de **m**, que es inconsistente.
-#9. La PERSONA 40 tiene en la variable **SEXO** el valor de **hombre**, que es inconsistente.
-#10. La PERSONA 51 tiene en la variable **SEXO** el valor de **MUJER**, que es inconsistente.
-#11. La PERSONA 18 tiene en la variable **NIVEL ESCOLAR** el valor **PHD** en vez de **DOCTORADO**.
-#12. La PERSONA 33 tiene en la variable **NIVEL ESCOLAR** el valor **PHD** en vez de **DOCTORADO**.
-#13. La PERSONA 40 tiene en la variable **NIVEL ESCOLAR** el valor **PHD** en vez de **DOCTORADO**.
-#14. La PERSONA 54 tiene en la variable **NIVEL ESCOLAR** el valor **PHD** en vez de **DOCTORADO**.
-#15. La PERSONA 24 tiene varios datos faltantes en las variables de **EDAD, NIVEL ESCOLAR, NUMERO DE HIJOS**.
-#16. La PERSONA 33 tiene en la variable **NUMERO DE HIJOS** un valor de **54**, que es anormalmente alto respecto a la media (3.03).
-#17. La PERSONA 31 tiene en la variable **ESTATURA** un valor de **3.45**, que es anormal respecto a la media (1.69).
-#18. La PERSONA 4 tiene en la variable **SEXO** el valor **f**, que no sigue el formato en mayúsculas usado en los demás registros.
-#19. La PERSONA 18 tiene en la variable **SEXO** el valor **f**, que no sigue el formato en mayúsculas usado en los demás registros.
-#20. La PERSONA 36 tiene en la variable **SEXO** el valor **m**, que no sigue el formato en mayúsculas usado en los demás registros.
-#21. La PERSONA 37 tiene en la variable **SEXO** el valor **m**, que no sigue el formato en mayúsculas usado en los demás registros.
-#22. La PERSONA 38 tiene en la variable **SEXO** el valor **mujer**, que no sigue el formato en mayúsculas usado en los demás registros.
-#23. La PERSONA 39 tiene en la variable **SEXO** el valor **m**, que no sigue el formato en mayúsculas usado en los demás registros.
-#24. La PERSONA 40 tiene en la variable **SEXO** el valor **hombre**, que no sigue el formato en mayúsculas usado en los demás registros.
-#25. La PERSONA 54 tiene en la variable **SEXO** el valor **f**, que no sigue el formato en mayúsculas usado en los demás registros.
-#26. La PERSONA 58 tiene en la variable **SEXO** el valor **f**, que no sigue el formato en mayúsculas usado en los demás registros.
-#27. La PERSONA 18 tiene en la variable **NIVEL ESCOLAR** el valor **PhD**, que no sigue el formato en mayúsculas usado en los demás registros.
-#28. La PERSONA 33 tiene en la variable **NIVEL ESCOLAR** el valor **PhD**, que no sigue el formato en mayúsculas usado en los demás registros.
-#29. La PERSONA 40 tiene en la variable **NIVEL ESCOLAR** el valor **PhD**, que no sigue el formato en mayúsculas usado en los demás registros.
-#30. La PERSONA 54 tiene en la variable **NIVEL ESCOLAR** el valor **PhD**, que no sigue el formato en mayúsculas usado en los demás registros.
-#31. La PERSONA 36 tiene en la variable **MARCA DE AUTO** el valor **renault**, que no sigue el formato en mayúsculas usado en los demás registros.
-
-```
-  
 
 \newpage
 
@@ -177,18 +140,15 @@ f. Comentar sobre los posibles problemas en los datos:
 a. Evaluar la variable **"MARCA DE AUTO"** y determinar si hay faltantes. 
 
 ```{r}
- #datos_base$`MARCA DE AUTO`(is.na)
- #(is.na(datos_base$`MARCA DE AUTO`))
  data_na_marca_autos <- sum(is.na(datos_base$`MARCA DE AUTO`))
 ```
 **Rta:** 
-Se tratan datos faltantes y se encuentran un total de   **`r data_na_marca_autos`**;  se realiza tratamiento de datos remplazando los "na"/"NA" a "NO_MANEJA", se convierte todo mayúsculas.
-```{r}
- Sys.setlocale("LC_ALL", "Spanish_Colombia.UTF-8")
+Se tratan datos faltantes y se encuentran un total de   **`r data_na_marca_autos`**;  se realiza tratamiento de datos remplazando los "na"/"NA" a "SIN_CONFIRMAR", se convierte todo mayúsculas.
+```{r tratamiento_marca_autos, include=TRUE}
+ #Tratamiento datos MARCA DE AUTOS 
  #Eliminar columna 1, 2 
  datos_base <- datos_base[-c(1,2), ]
  #Datos Eliminados
- #print(datos_base)
  na_marca_autos <- sum(is.na(datos_base$`MARCA DE AUTO`)) 
  # PERSONA 13, 32, 49, NA y datos vacios 
  datos_base$`MARCA DE AUTO`[is.na(datos_base$`MARCA DE AUTO`) | datos_base$`MARCA DE AUTO` == "NA"] <- "SIN_CONFIRMAR"
@@ -196,64 +156,44 @@ Se tratan datos faltantes y se encuentran un total de   **`r data_na_marca_autos
  datos_base$`MARCA DE AUTO`[ datos_base$`MARCA DE AUTO` == "FOR"] <- "FORD"
  # PERSONA 40 cambia BWM A BMW 
  datos_base$`MARCA DE AUTO`[ datos_base$`MARCA DE AUTO` == "BWM"] <- "BMW"
- 
- #print(datos_base)
  # PERSONA 36 cambio a mayuscula marca 
  datos_base$`MARCA DE AUTO` <- toupper(datos_base$`MARCA DE AUTO`)
- print(datos_base)
 ```
+b. Crear una tabla de frecuencias para entender la popularidad de las diferentes marcas entre los cliente.
 
-b. Crear un tabla de frecuencias para entender la popularidad de las diferentes marcas entre los cliente. 
-**Rta:** En la tabla de frecuencias se observa que las marcas más populares son AUDI, CHEVROLET, RENAULT y BMW. Los tres usuarios que no tienen la categoría ""SIN_CONFIRMAR"" se identificaron como personas a partir de 50 años       
-```{r}
+**Rta: **En la tabla de frecuencias se observa que las marcas más populares son AUDI, CHEVROLET, RENAULT y BMW. Los tres usuarios que no tienen la categoría ""SIN_CONFIRMAR"" se identificaron como personas a partir de 50 años.
+
+```{r tabla_frecuencias, echo=FALSE, results='asis'}
 tabla_frecuencias_autos <- as.data.frame(table(datos_base$`MARCA DE AUTO`))
 names(tabla_frecuencias_autos) <- c("MARCA DE AUTO", "Frecuencia")
 #Organizar Mayor a menor
 tabla_frecuencias_autos <- tabla_frecuencias_autos %>% arrange(desc(Frecuencia))
-print(tabla_frecuencias_autos)
+#print(tabla_frecuencias_autos)
+kable(head(tabla_frecuencias_autos,  caption = "Distribucino Marcas"),format = "latex", booktabs = TRUE)
 ```
 
-c. Generar graficos de barras y de tortas para visualizar la distribucion de las marcas de autos y proporcionar una interpretacion. 
+c. Generar gráficos de barras y de tortas para visualizar la distribución de las marcas de autos y proporcionar una interpretación.
+
 **Rta: **
-Se identifica que las marcas de vehiculos preferidas por los clientes del concesionario son **AUDi** 
-y **RENAULT**; se observa una segmentacion igual por pares entre las entre AUDI/RENAULT y CHEVROLET/BMW
+- Se identifica que las marcas de vehículos preferidas por los clientes del concesionario son **AUDI**  y **RENAULT**; se observa una segmentación igual por pares entre las entre AUDI/RENAULT y CHEVROLET/BMW
 
-```{r grafico_barras_marcas, echo=FALSE, results='asis' }
+- La preferencia de vehículos esta distribuida entre 4 marcas que suman 83% de la muestra, estas cuatro marcas a su vez representan dos segmentos que se reparten en el mismo porcentaje 21%/21% y 20%/20%.  
 
-#Diagrama de barras MARCA AUTO
+```{r grafico_torta_barras_marca de autos,echo=FALSE, results='asis'}
+library(ggplot2)
+library(forcats)  # para fct_reorder
 
-ggplot(tabla_frecuencias_autos, aes(x = fct_reorder(`MARCA DE AUTO`, Frecuencia, .desc = TRUE), 
-                                    y = Frecuencia, fill = `MARCA DE AUTO`)) +
-  geom_bar(stat = "identity",  fill = "steelblue") +
-  geom_text(aes(label = Frecuencia), vjust = -0.5, size = 3.5) +
-  labs(title = "Distribución de marcas de autos",
-       x = "Marca de Auto",
-       y = "Frecuencia") +
-  #scale_fill_brewer(palette = "Set3") +  # Usando paleta predefinida para categorias
-  theme_minimal() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 45, hjust = 1))  # Texto en Ãngulo para mejor lectura
+# Calcular porcentajes
+tabla_frecuencias_autos$Porcentaje <- round(tabla_frecuencias_autos$Frecuencia / sum(tabla_frecuencias_autos$Frecuencia) * 100, 1)
 
-```
-**Rta: **
-La preferencia de vehículos esta distribuida entre 4 marcas que suman 83% de la muestra, estas cuatro marcas a su vez representan dos segmentos que se reparten en el mismo porcentaje 21%/21% y 20%/20%.  
-```{r}
-
-```
-
-d. Concluir cuál es la marca de auto más popular entre los clientes. 
-**Rta:**
-Se concluyen que AUDI y RENAULT son las marcas lideres con una distribución uniforme en el los clientes del concesionario en un porcentaje del 21.7 entre ambas ocupan el 42.4%.  
-```{r}
-
-tabla_frecuencias_autos$Porcentaje <- round(tabla_frecuencias_autos$Frecuencia/sum(tabla_frecuencias_autos$Frecuencia)*100, 1)
-print(tabla_frecuencias_autos)
+# Reordenar niveles
 tabla_frecuencias_autos$`MARCA DE AUTO` <- factor(
   tabla_frecuencias_autos$`MARCA DE AUTO`,
   levels = tabla_frecuencias_autos$`MARCA DE AUTO`[order(-tabla_frecuencias_autos$Frecuencia)]
 )
-# Crear el grafico circular de MARCAS AUTOS 
-ggplot(tabla_frecuencias_autos, aes(x = "", y = Frecuencia, fill = `MARCA DE AUTO`)) +
+
+# Gráfico circular
+grafico_pastel <- ggplot(tabla_frecuencias_autos, aes(x = "", y = Frecuencia, fill = `MARCA DE AUTO`)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar("y", start = 0) +
   geom_text(aes(label = paste0(Porcentaje, "%")),
@@ -261,12 +201,116 @@ ggplot(tabla_frecuencias_autos, aes(x = "", y = Frecuencia, fill = `MARCA DE AUT
             size = 4,
             color = "black",
             fontface = "bold") +
-  labs(title = "Distribucion Marcas de Autos",
+  labs(title = "Dist marcas de autos",
        fill = "MARCA DE AUTO") +
-  scale_fill_brewer(palette = "Paired") +  # Usando paleta predefinida
+  scale_fill_brewer(palette = "Paired") +
   theme_void() +
   theme(legend.position = "right",
-        plot.title = element_text(hjust = 0.5, face = "bold"))
+          legend.box = "vertical",
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+       # plot.margin = margin(0, 0, 0, 0) 
+        )
+  #+guides(fill = guide_legend(ncol = 2, title.position = "top")) 
+
+# Gráfico de barras
+grafico_barras <- ggplot(tabla_frecuencias_autos, aes(x = fct_reorder(`MARCA DE AUTO`, Frecuencia, .desc = TRUE), 
+                                                      y = Frecuencia)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = Frecuencia), vjust = -0.5, size = 3.0) +
+  labs(title = "Dist de marcas de autos",
+       x = "Marca de Auto",
+       y = "Frecuencia") +
+  theme_minimal() +
+  theme(legend.position = "button",
+        axis.text.x = element_text(angle = 45, hjust = 1), 
+        plot.title = element_text(hjust = 0.5, face = "bold")
+        )+
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
+
+```
+
+```{r}
+ grafico_barras + grafico_pastel   + plot_layout(widths = c(4, 4.5))
+```
+
+
+d. Concluir cuál es la marca de auto más popular entre los clientes. 
+
+**Rta: **
+Se concluyen que AUDI y RENAULT son las marcas lideres con una distribución uniforme en el los clientes del concesionario en un porcentaje del 21.7 entre ambas ocupan el 42.4%.  
+
+\newpage
+
+## 4 Análisis de la variable "Edad".  
+a.	Verificar si la variable “EDAD” está correctamente importada como tipo numérico.
+
+**Rta:** La variable edad es de tipo **caracter** sin embargo su naturaleza es de tipo Cuantitativa discreta para este conjunto de datos por este motivo se va a relizar la conversión a **numeric** en la sección dedicada a normalización de datos.   
+
+```{r}
+summary(datos_base$EDAD)
+```
+
+b.	Identificar cualquier valor incorrecto (por ejemplo, texto en lugar de números) y corrija los errores.
+
+**Rta: **Se encuentran datos incosistententes por formato y **NA** se imputa la media para ambos casos, para el caso de aoutfillers se trabaja con el datos atipico de 10 años para la persona que tenia una edad de 10 años imputando la media.  
+```{r tratamiento_datos_edad, include=TRUE}
+#TRATAMIENTO DE DATOS EDAD 
+#Agrega NA a los datos que no se pueden convertir a numerico 
+datos_base$EDAD <- as.numeric(datos_base$EDAD)
+#Lista las personas que tienen problemas 24 y 28
+datos_base[is.na(datos_base$EDAD), c("PERSONA", "EDAD")]
+#Se realiza la imputacion de la media a los datos con problema
+datos_base$EDAD[is.na(datos_base$EDAD)] <- median(datos_base$EDAD, na.rm = TRUE)
+#summary(datos_base$EDAD)
+#Datos atipicos
+rango_edad <- range(datos_base$EDAD, na.rm = TRUE)
+# Mostrar dos gráficos uno al lado del otro
+par(mfrow = c(1, 2))  # 1 fila, 2 columnas
+boxplot(datos_base$EDAD, main = "Outliers en Edad", ylab = "Edad", col = "lightblue", ylim=rango_edad )
+datos_base$EDAD[datos_base$EDAD == 10] <- median(datos_base$EDAD, na.rm = TRUE)
+rango_edad <- range(datos_base$EDAD, na.rm = TRUE)
+boxplot(datos_base$EDAD, main = "Outliers ajustados en Edad", ylab = "Edad", col = "lightgreen", ylim=rango_edad)
+# Restaurar configuración gráfica a 1 gráfico por figura (opcional)
+par(mfrow = c(1, 1))
+#outliers <- boxplot.stats(datos_base$EDAD)$out ? No funciono 
+
+```
+
+
+c.	Realizar un histograma de la variable edad y describir qué patrones se observan entre los clientes (ej. ¿son jóvenes? ¿predomina alguna franja de edad?)
+
+**Rta: ** 
+- La franja de edad en la que se presentan mayor numero de clientes de concesionario estan en la edad de los 40 a los 45 años. 
+- La franja de 55 a 65 años presenta una gran numeros de clientes 
+- El sector joven no presenta una alta concentracion con excepcion de la franja de los 25-30 años
+```{r}
+# Histograma con curva de densidad para la variable EDAD
+
+ggplot(datos_base, aes(x = EDAD)) +
+  geom_histogram(binwidth = 5,
+                 fill = "skyblue",
+                 color = "white",
+                 boundary = 0) +
+
+  # Añadir línea de densidad
+  geom_density(aes(y = after_stat(count) * 5), 
+               color = "red", 
+               linewidth = 1) +
+  labs(title = "Distribución de Edades",
+       subtitle = "Histograma con curva de densidad",
+       x = "Edad (años)",
+       y = "Frecuencia",
+       caption = "Ancho de intervalo: 5 años") +
+  # Ajustar ejes para mejorar la visualización
+  scale_x_continuous(breaks = seq(0, max(datos_base$EDAD, na.rm = TRUE) + 5, by = 5)) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(face = "bold")
+  )
+
+
 ```
 \newpage
 
@@ -276,10 +320,29 @@ a. Revisar la variable "ESTATURA" para asegurar que este correctamente importada
 **Rta:**
 Se puede observar que la variable ESTATURA se encuentra con 60 registros de tipo numeric, sin registros de na y con valores ajustados dentro de las estaturas promedio, ya que se homologo un valor que se encontraba por fuera del valor posible en la edad de una persona. 
 ```{r}
+#TRATAMIENTO DE DATOS ESTATURA 
 #Se convierte a numerico el dato caracter
 datos_base$ESTATURA <- as.numeric(datos_base$ESTATURA)
-#Se reemplaza el valor especifico de la columna ESTATURA en el registro 31
-datos_base$ESTATURA[datos_base$ESTATURA == 3.450] <- 1.685
+#Datos atipicos
+rango_estatura <- range(datos_base$ESTATURA, na.rm = TRUE)
+# Mostrar dos gráficos uno al lado del otro
+par(mfrow = c(1, 2))  # 1 fila, 2 columnas
+  boxplot(datos_base$ESTATURA, 
+          main = "Outliers en Estatura", 
+          ylab = "Estatura", 
+          col = "lightblue", 
+          ylim = rango_estatura )
+  #Se reemplaza el valor especifico de la columna ESTATURA en la persona 31 por la media 
+  media_sin_atipicos <- median(datos_base$ESTATURA[datos_base$ESTATURA != 3.5], na.rm = TRUE)
+  datos_base$ESTATURA[datos_base$ESTATURA == 3.450] <- media_sin_atipicos
+  rango_estatura <- range(datos_base$ESTATURA, na.rm = TRUE)
+  boxplot(datos_base$ESTATURA, 
+          main = "Outliers ajustados en ESTATURA",
+          ylab = "Estatura", col = "lightgreen", ylim =rango_estatura)
+  # Restaurar configuración gráfica a 1 gráfico por figura (opcional)
+par(mfrow = c(1, 1))
+```
+```{r}
 #confirmación del tipo de dato
 class(datos_base$ESTATURA)
 #Se confirma que no tiene na
@@ -326,70 +389,59 @@ ggplot(datos_base, aes(x = EDAD)) +
 #Polígono de frecuencias detallado por intervalos 
 
 # Crear intervalos para Estatura
-intervalos_estatura <- seq(from = floor(min(datos_base$ESTATURA, na.rm = TRUE)/5)*5,
-                       to = ceiling(max(datos_base$ESTATURA, na.rm = TRUE)/5)*5,
-                       by = 5)```{r}
-                       print(intervalos_estatura)
+#intervalos_estatura <- seq(from = floor(min(datos_base$ESTATURA, na.rm = TRUE)/5)*5,
+#                       to = ceiling(max(datos_base$ESTATURA, na.rm = TRUE)/5)*5,
+#                       by = 5)```{r}
+#                       print(intervalos_estatura)
 
-# Crear tabla de frecuencias con intervalos
-tabla_freq_estatura <- datos_base %>%
-  mutate(Grupo_Estatura = cut(Estatura, 
-                          breaks = intervalos_estatura, 
-                          include.lowest = TRUE, 
-                          right = FALSE)) %>%
-  group_by(Grupo_Estatura) %>%
-  summarise(Frecuencia = n()) %>%
-  arrange(Grupo_Estatura)
+
 
 # Extraer los valores medios de cada intervalo para el eje X
-tabla_freq_edad$Valor_Medio <- as.numeric(sapply(tabla_freq_edad$Grupo_Edad, function(x) {
-  rango <- as.character(x)
-  limites <- as.numeric(unlist(strsplit(gsub("\\[|\\)|\\[|\\]", "", rango), ",")))
-  return(mean(limites))
-}))
+#tabla_freq_edad$Valor_Medio <- as.numeric(sapply(tabla_freq_edad$Grupo_Edad, function(x) {
+#  rango <- as.character(x)
+#  limites <- as.numeric(unlist(strsplit(gsub("\\[|\\)|\\[|\\]", "", rango), ",")))
+#  return(mean(limites))
+#}))
 
-# Crear polígono de frecuencias
-ggplot(tabla_freq_edad, aes(x = Valor_Medio, y = Frecuencia, group = 1)) +
-  geom_point(size = 3, color = "steelblue") +
-  geom_line(color = "steelblue", size = 1) +
-  geom_text(aes(label = Frecuencia), vjust = -0.8, size = 3.5) +
-  labs(title = "Polígono de Frecuencias - Edad por Grupos",
-       x = "Edad (años)",
-       y = "Frecuencia") +
-  scale_x_continuous(breaks = tabla_freq_edad$Valor_Medio,
-                     labels = as.character(tabla_freq_edad$Grupo_Edad)) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  
-  OJIVA 
+#Crear polígono de frecuencias
+# ggplot(tabla_freq_edad, aes(x = Valor_Medio, y = Frecuencia, group = 1)) +
+#   geom_point(size = 3, color = "steelblue") +
+#   geom_line(color = "steelblue", size = 1) +
+#   geom_text(aes(label = Frecuencia), vjust = -0.8, size = 3.5) +
+#   labs(title = "Polígono de Frecuencias - Edad por Grupos",
+#        x = "Edad (años)",
+#        y = "Frecuencia") +
+#   scale_x_continuous(breaks = tabla_freq_edad$Valor_Medio,
+#                      labels = as.character(tabla_freq_edad$Grupo_Edad)) +
+#   theme_minimal() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+#   
+#   OJIVA 
 #Ojiva de frencuencias acumuladas
 
 # Crear intervalos y calcular frecuencias acumuladas en un solo paso
-histData <- hist(datos_base$ESTATURA, breaks = seq(min(datos_base$ESTATURA, na.rm = TRUE), 
-                                         max(datos_base$ESTATURA, na.rm = TRUE) + 5, 
-                                         by = 5), 
-                plot = FALSE)
+#histData <- hist(datos_base$ESTATURA, breaks = seq(min(datos_base$ESTATURA, na.rm = TRUE), 
+#                                         max(datos_base$ESTATURA, na.rm = TRUE) + 5, 
+#                                         by = 5), 
+#                plot = FALSE)
 
 # Crear dataframe para la ojiva
-ojiva_data <- data.frame(
-  x = histData$breaks,
-  y = c(0, cumsum(histData$counts))
-)
+#ojiva_data <- data.frame(
+#  x = histData$breaks,
+#  y = c(0, cumsum(histData$counts))
+#)
 
 # Graficar ojiva
-ggplot(ojiva_data, aes(x = x, y = y)) +
-  geom_line(color = "darkred", size = 1) +
-  geom_point(color = "darkred", size = 3) +
-  labs(title = "Ojiva - Frecuencias Acumuladas de Estatura",
-       x = "Estatura (metros)",
-       y = "Frecuencia Acumulada") +
-  theme_minimal()
-
+#ggplot(ojiva_data, aes(x = x, y = y)) +
+#  geom_line(color = "darkred", size = 1) +
+#  geom_point(color = "darkred", size = 3) +
+#  labs(title = "Ojiva - Frecuencias Acumuladas de Estatura",
+#       x = "Estatura (metros)",
+#       y = "Frecuencia Acumulada") +
+#  theme_minimal()
+#print(datos_base)
 ```
                        
-
-
-
 \newpage
 
 ## 6 Análisis de la variable "Numero de hijos".
@@ -407,20 +459,48 @@ print(nueva_datos_base)
 
 b. Identificar problemas con los datos y eliminar valores inconsistentes.
 **Rta:**
-
+Se identifica que la persona 24 tiene NA en la variable hijos, por lo que le aplica el tratamiento y se iguala a 0
 ```{r}
-head(nueva_datos_base)
-sum(is.na(nueva_datos_base$N_HIJOS))
-is.na(nueva_datos_base$N_HIJOS)
-summary(nueva_datos_base$N_HIJOS)
+Sys.setlocale("LC_ALL", "es_CO.UTF-8") 
+#Se identificarn problemas 
+datos_base[is.na(datos_base$`NUMERO DE HIJOS`) | 
+           datos_base$`NUMERO DE HIJOS` == "NA", 
+           c("PERSONA", "NUMERO DE HIJOS")]
 print(nueva_datos_base)
-# Se identifica que la persona 24 tiene NA en la variable hijos, por lo que le aplica el tratamiento y se iguala a 0
-nueva_datos_base$N_HIJOS[nueva_datos_base$N_HIJOS == "NA"] <- 0
+# Se identifica que la persona 24 tiene NA en la variable hijos, 
+#por lo que le aplica el tratamiento y se iguala a 0
+nueva_datos_base$N_HIJOS[is.na(nueva_datos_base$N_HIJOS) | 
+                               nueva_datos_base$N_HIJOS == "NA"] <- "0"
+
 ```
 
 c. Generar una grafica de barras con colores y analizar que se puede concluir sobre el numero de hijos de los clientes.
 **Rta:**
 ```{r}
+tabla_frecuencias_hijos <- as.data.frame(table(nueva_datos_base$N_HIJOS))
+names(tabla_frecuencias_hijos) <- c("N_HIJOS", "Frecuencia")
+#Organizar Mayor a menor
+tabla_frecuencias_hijos <- tabla_frecuencias_hijos %>% arrange(desc(Frecuencia))
+
+# Gráfico de barras
+ggplot(tabla_frecuencias_hijos, 
+       aes(x = fct_reorder(`N_HIJOS`, Frecuencia, .desc = TRUE), 
+           y = Frecuencia,
+           fill = `N_HIJOS`)) +  # <- Aquí se asigna color por categoría
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Frecuencia), vjust = -0.5, size = 3.0) +
+  labs(title = "Dist numero hijos",
+       x = "Numero hijos",
+       y = "Frecuencia") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(
+    legend.position = "none",  # O "bottom" si deseas mostrarla
+    axis.text.x = element_text(angle = 45, hjust = 1), 
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
+
 
 ```
 
@@ -441,26 +521,58 @@ b. Crea una tabla de frecuencias y extraer conclusiones sobre la proporcion de h
 
 \newpage
 
-## 8 Preguntas de investigación".
-c. ¿Cuantos clientes con doctorado ganan mas de 2 millones de pesos?
-**Rta:**
+
+## 8 Preguntas de investigación.
+Utilizando las herramientas de RStudio (filtros, agrupaciones etc), responder a las siguientes preguntas: 
+a.	¿Cuántos clientes tienen mascota?
+
+```{r respuesta_clientes_mascota, } 
+
+no_clientes_mascota <- datos_base %>%  
+  filter(!is.na(MASCOTA) & toupper(MASCOTA) == "SI") %>% 
+  count()
+#print(no_clientes_mascota)
+```
+**Rta: **
+El numero de clientes que tiene mascota es:  **`r no_clientes_mascota `**
+
+b.	¿Cuántos clientes mayores de 25 años tienen una maestría?
+
 ```{r}
 
-print(datos_base)
-datos_clientes_doctorado<- sum(data_base$NIVEL_ESCOLAR="DOCTORA") %>% filter(datos_base$SALARIO>2000000)
-print(datos_clientes_doctirado)
+no_clientes_mayores_mascota <- datos_base %>% 
+  mutate(EDAD = as.numeric(EDAD)) %>% 
+  filter(!is.na(EDAD) & EDAD > 25) %>% 
+  filter( `NIVEL ESCOLAR` == "MAESTRÍA") %>%
+  count()
+    #select(PERSONA, EDAD, `NIVEL ESCOLAR`)
+```
+**Rta: **
+El numero de clientes mayores a 25 años con maestria son **`r no_clientes_mayores_mascota `** 
+
+
+c.	¿Cuántos clientes con doctorado ganan mas de 2 millones de pesos?
+
+```{r}
+
+#print(datos_base)
+#datos_clientes_doctorado<- sum(datos_base$`NIVEL ESCOLAR` == "DOCTORADO") %>% filter(datos_base$SALARIO>2000000)
+no_clientes_doctorado <- datos_base %>% filter(`NIVEL ESCOLAR` == "DOCTORADO" & SALARIO > 2000000) %>% count()
+```
+**Rta: **
+El numero de clientes con doctorado y salario superior a $2'000.000 es: `r no_clientes_doctorado`
+
+d.	¿Cuál es el promedio de salario por cada categoría de la variable “MARCA DE AUTO”?
+```{r}
+salario_promedio_por_marca_auto <- datos_base %>%
+  group_by(`MARCA DE AUTO`) %>%
+  summarise(promedio_salario = mean(SALARIO, na.rm = TRUE))
+kable(salario_promedio_por_marca_auto, caption = "Promedio de Salario por Marca de Auto") %>%
+  kable_styling(full_width = FALSE, position = "left")
+#print(salario_promedio_por_marca_auto)
+
 ```
 
 
-d. ¿Cual es el promedio de salario por cada categoria de variable "MARCA DE AUTO"?
-**Rta:**
-```{r}
-group_by(
-  
-) summary
-datos_base %>% group_by(`MARCA DE AUTO`) %>% 
-  summarise(mi
-  summarise(median(datos_base$`SALARIO`)
-```
 
 
