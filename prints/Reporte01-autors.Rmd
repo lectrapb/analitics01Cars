@@ -1,6 +1,6 @@
 ---
 title: "ANALISIS EXPLORATORIO 1 CONCESIONARIO DE AUTOS"
-author: Alejandra / Giovanny Porras 
+author: Alejandra Cifuentes / Giovanny Porras 
 output: 
   pdf_document:
      latex_engine: pdflatex
@@ -17,14 +17,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r instalacion librerias, eval=FALSE, include=FALSE}
 # Instala paquetes necesarios para el reporte
-install.packages("ggplot2")
-install.packages("readxl")
-install.packages("tidyr")
-install.packages("dplyr")
-install.packages("knitr")
+#install.packages("ggplot2")
+#install.packages("readxl")
+#install.packages("tidyr")
+#install.packages("dplyr")
+#install.packages("knitr")
 install.packages("kableExtra")
-install.packages("tinytex")
-tinytex::install_tinytex()
+#install.packages("tinytex")
+#tinytex::install_tinytex()
 
 ```
 
@@ -47,7 +47,8 @@ b. Cargar el archivo de datos en RStudio
 
 **Rta:** Carga de datos inicial 
 ```{r carga de datos inicial, include=TRUE}
-datos_base <- read_excel("D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto-02-Autos/BASE/t1fe-tabla_taller.xlsx")
+#datos_base <- read_excel("D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto-02-Autos/BASE/t1fe-tabla_taller.xlsx")
+datos_base <- read_excel("C:/Users/PC/Documents/ANALITICA/analitics01Cars/BASE/t1fe-tabla_taller.xlsx")
 kable(head(datos_base, 10,  caption = "Datos iniciales"), format = "latex", booktabs = TRUE) %>% 
   kable_styling(latex_options = c("scale_down", "hold_position"))
 ```
@@ -83,7 +84,7 @@ kable(head(ultimos_datos, 10, caption = "Datos ultima posicion"), format = "late
 #print(colnames(datos_base))
 print(summary(datos_base))
 ```
-e. Identificar si hay datos faltantes y cuantificar cuantos son en toal y por variable 
+e. Identificar si hay datos faltantes y cuantificar cuantos son en total y por variable 
 
 ```{r}
 #is.na(datos_base)
@@ -267,4 +268,199 @@ ggplot(tabla_frecuencias_autos, aes(x = "", y = Frecuencia, fill = `MARCA DE AUT
   theme(legend.position = "right",
         plot.title = element_text(hjust = 0.5, face = "bold"))
 ```
+\newpage
+
+## 5 Análisis de la variable "Estatura".
+
+a. Revisar la variable "ESTATURA" para asegurar que este correctamente importada y limpia.
+**Rta:**
+Se puede observar que la variable ESTATURA se encuentra con 60 registros de tipo numeric, sin registros de na y con valores ajustados dentro de las estaturas promedio, ya que se homologo un valor que se encontraba por fuera del valor posible en la edad de una persona. 
+```{r}
+#Se convierte a numerico el dato caracter
+datos_base$ESTATURA <- as.numeric(datos_base$ESTATURA)
+#Se reemplaza el valor especifico de la columna ESTATURA en el registro 31
+datos_base$ESTATURA[datos_base$ESTATURA == 3.450] <- 1.685
+#confirmación del tipo de dato
+class(datos_base$ESTATURA)
+#Se confirma que no tiene na
+sum(is.na(datos_base$ESTATURA))
+#Se confirma estructura y media de la variable
+summary(datos_base$ESTATURA)
+```
+
+b. Identificar los datos faltantes o valores inconsistentes. Eliminar esos registros.
+**Rta:**
+En el anterior respuesta se evidencia que se identifico el registro de un dato  atipico con valor de 3.450 en estatura, y se homologo por el valor de la media de los registros 1,685
+
+c. Generar un poligono de frecuencia y una ojiva para analizar la distribución de la estatura de los clientes y extraer conclusiones.
+**Rta:**
+```{r}
+print(datos_base$ESTATURA)
+
+#Polígono de frencuencias (sencillo)
+
+# Polígono de frecuencias con intervalos automáticos
+ggplot(datos_base, aes(x = ESTATURA)) +
+  geom_freqpoly(binwidth = 5, color = "steelblue", size = 1) +
+  labs(title = "Polígono de Frecuencias - Estatura",
+       x = "Estatura (metros)",
+       y = "Frecuencia") +
+  theme_minimal()
+
+summary(datos_base$EDAD)
+datos_base$EDAD <- as.numeric(datos_base$EDAD)
+is.na(datos_base$EDAD)
+
+
+# Polígono de frecuencias con intervalos automáticos
+ggplot(datos_base, aes(x = EDAD)) +
+  geom_freqpoly(binwidth = 5, color = "steelblue", size = 1) +
+  labs(title = "Polígono de Frecuencias - Estatura",
+       x = "Estatura (metros)",
+       y = "Frecuencia") +
+  theme_minimal()
+```
+
+
+```{r}
+#Polígono de frecuencias detallado por intervalos 
+
+# Crear intervalos para Estatura
+intervalos_estatura <- seq(from = floor(min(datos_base$ESTATURA, na.rm = TRUE)/5)*5,
+                       to = ceiling(max(datos_base$ESTATURA, na.rm = TRUE)/5)*5,
+                       by = 5)```{r}
+                       print(intervalos_estatura)
+
+# Crear tabla de frecuencias con intervalos
+tabla_freq_estatura <- datos_base %>%
+  mutate(Grupo_Estatura = cut(Estatura, 
+                          breaks = intervalos_estatura, 
+                          include.lowest = TRUE, 
+                          right = FALSE)) %>%
+  group_by(Grupo_Estatura) %>%
+  summarise(Frecuencia = n()) %>%
+  arrange(Grupo_Estatura)
+
+# Extraer los valores medios de cada intervalo para el eje X
+tabla_freq_edad$Valor_Medio <- as.numeric(sapply(tabla_freq_edad$Grupo_Edad, function(x) {
+  rango <- as.character(x)
+  limites <- as.numeric(unlist(strsplit(gsub("\\[|\\)|\\[|\\]", "", rango), ",")))
+  return(mean(limites))
+}))
+
+# Crear polígono de frecuencias
+ggplot(tabla_freq_edad, aes(x = Valor_Medio, y = Frecuencia, group = 1)) +
+  geom_point(size = 3, color = "steelblue") +
+  geom_line(color = "steelblue", size = 1) +
+  geom_text(aes(label = Frecuencia), vjust = -0.8, size = 3.5) +
+  labs(title = "Polígono de Frecuencias - Edad por Grupos",
+       x = "Edad (años)",
+       y = "Frecuencia") +
+  scale_x_continuous(breaks = tabla_freq_edad$Valor_Medio,
+                     labels = as.character(tabla_freq_edad$Grupo_Edad)) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+  OJIVA 
+#Ojiva de frencuencias acumuladas
+
+# Crear intervalos y calcular frecuencias acumuladas en un solo paso
+histData <- hist(datos_base$ESTATURA, breaks = seq(min(datos_base$ESTATURA, na.rm = TRUE), 
+                                         max(datos_base$ESTATURA, na.rm = TRUE) + 5, 
+                                         by = 5), 
+                plot = FALSE)
+
+# Crear dataframe para la ojiva
+ojiva_data <- data.frame(
+  x = histData$breaks,
+  y = c(0, cumsum(histData$counts))
+)
+
+# Graficar ojiva
+ggplot(ojiva_data, aes(x = x, y = y)) +
+  geom_line(color = "darkred", size = 1) +
+  geom_point(color = "darkred", size = 3) +
+  labs(title = "Ojiva - Frecuencias Acumuladas de Estatura",
+       x = "Estatura (metros)",
+       y = "Frecuencia Acumulada") +
+  theme_minimal()
+
+```
+                       
+
+
+
+\newpage
+
+## 6 Análisis de la variable "Numero de hijos".
+
+a. Cambiar el nombre de la varaible a "n.hijos" para facilitar su manejo.
+**Rta:**
+Se realiza consulta de lal data frame original, posteriormente se le aplica el tratamiento solicitado guardando el resultado en un nuevo dataframe y por ultimo se consulta el dataframe creado para evidenciar el resultado.
+```{r}
+print(datos_base)
+nueva_datos_base <-
+  rename(datos_base,N_HIJOS="NUMERO DE HIJOS")
+print(nueva_datos_base)
+```
+
+
+b. Identificar problemas con los datos y eliminar valores inconsistentes.
+**Rta:**
+
+```{r}
+head(nueva_datos_base)
+sum(is.na(nueva_datos_base$N_HIJOS))
+is.na(nueva_datos_base$N_HIJOS)
+summary(nueva_datos_base$N_HIJOS)
+print(nueva_datos_base)
+# Se identifica que la persona 24 tiene NA en la variable hijos, por lo que le aplica el tratamiento y se iguala a 0
+nueva_datos_base$N_HIJOS[nueva_datos_base$N_HIJOS == "NA"] <- 0
+```
+
+c. Generar una grafica de barras con colores y analizar que se puede concluir sobre el numero de hijos de los clientes.
+**Rta:**
+```{r}
+
+```
+
+\newpage
+
+## 7 Análisis de la variable "Sexo".
+
+a. Revisar la consistencia de los datos de la varaible "SEXO" y realizar correcciones en caso de encontrar valores inusuales o inconsistentes.
+**Rta:**
+```{r}
+is.na(datos_base$SEXO)
+print(nueva_datos_base)
+```
+
+
+b. Crea una tabla de frecuencias y extraer conclusiones sobre la proporcion de hombres y mujeres en el conjunto de clientes.
+**Rta:**
+
+\newpage
+
+## 8 Preguntas de investigación".
+c. ¿Cuantos clientes con doctorado ganan mas de 2 millones de pesos?
+**Rta:**
+```{r}
+
+print(datos_base)
+datos_clientes_doctorado<- sum(data_base$NIVEL_ESCOLAR="DOCTORA") %>% filter(datos_base$SALARIO>2000000)
+print(datos_clientes_doctirado)
+```
+
+
+d. ¿Cual es el promedio de salario por cada categoria de variable "MARCA DE AUTO"?
+**Rta:**
+```{r}
+group_by(
+  
+) summary
+datos_base %>% group_by(`MARCA DE AUTO`) %>% 
+  summarise(mi
+  summarise(median(datos_base$`SALARIO`)
+```
+
 

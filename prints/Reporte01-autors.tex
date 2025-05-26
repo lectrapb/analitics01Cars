@@ -116,12 +116,12 @@
 \urlstyle{same}
 \hypersetup{
   pdftitle={ANALISIS EXPLORATORIO 1 CONCESIONARIO DE AUTOS},
-  pdfauthor={Alejandra / Giovanny Porras},
+  pdfauthor={Alejandra Cifuentes / Giovanny Porras},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
 \title{ANALISIS EXPLORATORIO 1 CONCESIONARIO DE AUTOS}
-\author{Alejandra / Giovanny Porras}
+\author{Alejandra Cifuentes / Giovanny Porras}
 \date{2025-05-24}
 
 \begin{document}
@@ -146,7 +146,8 @@
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{datos\_base }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto{-}02{-}Autos/BASE/t1fe{-}tabla\_taller.xlsx"}\NormalTok{)}
+\CommentTok{\#datos\_base \textless{}{-} read\_excel("D:/MaestriaAnalitica/BasesAnalitica/gitRepository/Proyecto{-}02{-}Autos/BASE/t1fe{-}tabla\_taller.xlsx")}
+\NormalTok{datos\_base }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"C:/Users/PC/Documents/ANALITICA/analitics01Cars/BASE/t1fe{-}tabla\_taller.xlsx"}\NormalTok{)}
 \FunctionTok{kable}\NormalTok{(}\FunctionTok{head}\NormalTok{(datos\_base, }\DecValTok{10}\NormalTok{,  }\AttributeTok{caption =} \StringTok{"Datos iniciales"}\NormalTok{), }\AttributeTok{format =} \StringTok{"latex"}\NormalTok{, }\AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
   \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"scale\_down"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{))}
 \end{Highlighting}
@@ -274,8 +275,8 @@ PERSONA 60 & 10 & M & 1.8 & PROFESIONAL & AUDI & 0 & 1000000 & NO\\
 \setcounter{enumi}{4}
 \tightlist
 \item
-  Identificar si hay datos faltantes y cuantificar cuantos son en toal y
-  por variable
+  Identificar si hay datos faltantes y cuantificar cuantos son en total
+  y por variable
 \end{enumerate}
 
 \begin{Shaded}
@@ -551,5 +552,74 @@ representan dos segmentos que se reparten en el mismo porcentaje
 \end{Shaded}
 
 \pandocbounded{\includegraphics[keepaspectratio]{Reporte01-autors_files/figure-latex/unnamed-chunk-7-1.pdf}}
+\newpage
+
+\subsection{5 Análisis de la variable
+``Estatura''.}\label{anuxe1lisis-de-la-variable-estatura.}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\item
+  Revisar la variable ``ESTATURA'' para asegurar que este correctamente
+  importada y limpia. \textbf{Rta:}
+\item
+  Identificar los datos faltantes o valores inconsistentes. Eliminar
+  esos registros. \textbf{Rta:}
+\item
+  Generar un poligono de frecuencia y una ojiva para analizar la
+  distribución de la estatura de los clientes y extraer conclusiones.
+  \textbf{Rta:}
+\end{enumerate}
+
+\newpage
+
+\subsection{6 Análisis de la variable ``Numero de
+hijos''.}\label{anuxe1lisis-de-la-variable-numero-de-hijos.}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\item
+  Cambiar el nombre de l varaible a ``n.hijos'' para facilitar su
+  manejo. \textbf{Rta:}
+\item
+  Identificar problemas con los datos y eliminar valores inconsistentes.
+  \textbf{Rta:}
+\item
+  Generar una grafica de barras con colores y analizar que se puede
+  concluir sobre el numero de hijos de los clientes. \textbf{Rta:}
+\end{enumerate}
+
+\newpage
+
+\subsection{7 Análisis de la variable
+``Sexo''.}\label{anuxe1lisis-de-la-variable-sexo.}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\item
+  Revisar la consistencia de los datos de la varaible ``SEXO'' y
+  realizar correcciones en caso de encontrar valores inusuales o
+  inconsistentes. \textbf{Rta:}
+\item
+  Crea una tabla de frecuencias y extraer conclusiones sobre la
+  proporcion de hombres y mujeres en el conjunto de clientes.
+  \textbf{Rta:}
+\end{enumerate}
+
+\newpage
+
+\subsection{8 Preguntas de
+investigación''.}\label{preguntas-de-investigaciuxf3n.}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\item
+  ¿Cuantos clientes con doctorado ganan mas de 2 millones de pesos?
+  \textbf{Rta:}
+\item
+  ¿Cual es el promedio de salario por cada categoria de variable ``MARCA
+  DE AUTO''? \textbf{Rta:}
+\end{enumerate}
 
 \end{document}
